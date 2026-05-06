@@ -48,6 +48,7 @@
                   class="recommendation-card h-100"
                   variant="outlined"
                   hover
+                  @click="openRecommendation(item)"
                 >
                   <div class="image-container">
                     <v-img
@@ -135,6 +136,13 @@
           </v-container>
         </section>
       </v-container>
+
+      <ViewRecommendationsDialog
+        v-model="showDialog"
+        :recommendation="selectedRecommendation"
+        @add-to-cart="handleAddToCart"
+        @chat="handleChat"
+      />
     </template>
   </InnerLayoutWrapper>
 </template>
@@ -144,10 +152,14 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
 import { recommendations } from "@/pages/hometab/data/recommendationsData";
+import type { RecommendationItem } from "@/pages/hometab/data/recommendationsData";
+import ViewRecommendationsDialog from "@/pages/hometab/dialogs/ViewRecommendationsDialog.vue";
 
 const route = useRoute();
 const router = useRouter();
 const query = ref("");
+const showDialog = ref(false);
+const selectedRecommendation = ref<RecommendationItem | null>(null);
 
 const filteredRecommendations = computed(() => {
   const term = query.value.trim().toLowerCase();
@@ -181,6 +193,19 @@ const goBack = () => {
 const getReviewLabel = (count: number) => {
   if (!count) return "No ratings";
   return `${count} ${count === 1 ? "review" : "reviews"}`;
+};
+
+const openRecommendation = (item: RecommendationItem) => {
+  selectedRecommendation.value = item;
+  showDialog.value = true;
+};
+
+const handleAddToCart = () => {
+  showDialog.value = false;
+};
+
+const handleChat = () => {
+  showDialog.value = false;
 };
 
 onMounted(() => {

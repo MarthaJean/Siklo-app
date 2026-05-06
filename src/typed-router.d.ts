@@ -36,6 +36,7 @@ declare module 'vue-router/auto-routes' {
     '/ForbiddenView': RouteRecordInfo<'/ForbiddenView', '/ForbiddenView', Record<never, never>, Record<never, never>>,
     '/hometab/components/ListingsWidget': RouteRecordInfo<'/hometab/components/ListingsWidget', '/hometab/components/ListingsWidget', Record<never, never>, Record<never, never>>,
     '/hometab/components/SearchWidget': RouteRecordInfo<'/hometab/components/SearchWidget', '/hometab/components/SearchWidget', Record<never, never>, Record<never, never>>,
+    '/hometab/dialogs/ViewRecommendationsDialog': RouteRecordInfo<'/hometab/dialogs/ViewRecommendationsDialog', '/hometab/dialogs/ViewRecommendationsDialog', Record<never, never>, Record<never, never>>,
     '/hometab/HomeAnnouncements': RouteRecordInfo<'/hometab/HomeAnnouncements', '/hometab/HomeAnnouncements', Record<never, never>, Record<never, never>>,
     '/hometab/HomeLogs': RouteRecordInfo<'/hometab/HomeLogs', '/hometab/HomeLogs', Record<never, never>, Record<never, never>>,
     '/hometab/ListingsView': RouteRecordInfo<'/hometab/ListingsView', '/hometab/ListingsView', Record<never, never>, Record<never, never>>,
