@@ -159,7 +159,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 
 const isScrolled = ref(false)
@@ -185,14 +185,14 @@ const steps = [
   { title: 'Connect & Earn', description: 'Negotiate, transact, and rate your partner' }
 ]
 
-const featuresRef = ref(null)
-const impactRef = ref(null)
-const howItWorksRef = ref(null)
-const whoItsForRef = ref(null)
+const featuresRef = ref<HTMLElement | null>(null)
+const impactRef = ref<HTMLElement | null>(null)
+const howItWorksRef = ref<HTMLElement | null>(null)
+const whoItsForRef = ref<HTMLElement | null>(null)
 
-const count1 = ref(null)
-const count2 = ref(null)
-const count3 = ref(null)
+const count1 = ref<HTMLElement | null>(null)
+const count2 = ref<HTMLElement | null>(null)
+const count3 = ref<HTMLElement | null>(null)
 
 let impactAnimated = false
 
@@ -200,14 +200,14 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
 
-const scrollTo = (id) => {
+const scrollTo = (id: string) => {
   const el = document.getElementById(id)
   if (el) {
     el.scrollIntoView({ behavior: 'smooth' })
   }
 }
 
-const animateCounter = (el, target, duration = 1500) => {
+const animateCounter = (el: HTMLElement | null, target: number, duration = 1500) => {
   if (!el) return
   const start = 0
   const increment = target / (duration / 16)
@@ -216,10 +216,10 @@ const animateCounter = (el, target, duration = 1500) => {
   const update = () => {
     current += increment
     if (current < target) {
-      el.innerText = Math.ceil(current)
+      el.innerText = Math.ceil(current).toString()
       requestAnimationFrame(update)
     } else {
-      el.innerText = target
+      el.innerText = target.toString()
     }
   }
   update()
