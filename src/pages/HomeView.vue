@@ -5,6 +5,7 @@ import { storeToRefs } from "pinia";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
 import HomeLogs from "@/pages/hometab/HomeLogs.vue";
 import HomeAnnouncements from "@/pages/hometab/HomeAnnouncements.vue";
+import ListingsView from "@/pages/hometab/ListingsView.vue";
 
 const authStore = useAuthUserStore();
 const toast = useToast();
@@ -36,6 +37,16 @@ const handleLogout = async () => {
         <section class="announcements-section mb-8">
           <v-container>
             <HomeAnnouncements />
+          </v-container>
+        </section>
+
+        <!-- Divider -->
+        <v-divider class="mx-4 mb-8" />
+
+        <!-- Listings Preview Section -->
+        <section class="listings-section mb-8">
+          <v-container>
+            <ListingsView />
           </v-container>
         </section>
 

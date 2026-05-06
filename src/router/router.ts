@@ -10,6 +10,7 @@ import AdminUserRolesView from "@/pages/admin/AdminUserRolesView.vue";
 import UserManagementView from "@/pages/admin/UserManagementView.vue";
 import AnnouncementsView from "@/pages/admin/AnnouncementsView.vue";
 import SettingsView from "@/pages/account/SettingsView.vue";
+import SearchView from "@/pages/hometab/SearchView.vue";
 
 /**
  * Route definitions for the application
@@ -30,6 +31,10 @@ const routes = setupLayouts([
     meta: { requiresAuth: true },
   },
   {
+    path: "/search",
+    component: SearchView,
+  },
+  {
     path: "/account/settings",
     component: SettingsView,
     meta: { requiresAuth: true },
@@ -42,12 +47,12 @@ const routes = setupLayouts([
   {
     path: "/admin/user-management",
     component: UserManagementView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/admin/announcements",
     component: AnnouncementsView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/forbidden",
