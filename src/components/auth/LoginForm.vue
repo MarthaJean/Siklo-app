@@ -85,6 +85,7 @@ import {
 import { useAuthUserStore } from "@/stores/authUser";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
+import { getHomeRouteForRole } from "@/utils/navigation";
 
 // Emits
 defineEmits<{
@@ -134,10 +135,7 @@ const handleLogin = async () => {
   clearErrors();
 
   try {
-    const result = await authStore.signIn(
-      loginForm.email,
-      loginForm.password
-    );
+    const result = await authStore.signIn(loginForm.email, loginForm.password);
 
     if (result.error) {
       const errorMessage = getErrorMessage(result.error);
@@ -152,7 +150,8 @@ const handleLogin = async () => {
     } else {
       toast.success("Login successful!");
       resetForm();
-      router.push("/");
+      const roleId = result.user?.user_metadata?.role;
+      router.push(getHomeRouteForRole(roleId));
     }
   } catch (error: any) {
     toast.error(error.message || "An unexpected error occurred");

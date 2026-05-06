@@ -6,7 +6,7 @@
         <div>
           <h2 class="text-h5 font-weight-bold mb-2">
             <v-icon icon="mdi-storefront" class="me-2" color="primary" />
-            Latest Listings
+            Latest Listings Near Me
           </h2>
           <p class="text-body-2 text-medium-emphasis">
             Browse recent listings from the marketplace

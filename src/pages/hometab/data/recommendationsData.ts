@@ -5,6 +5,7 @@ export type RecommendationItem = {
   tag: string;
   icon: string;
   image_url: string;
+  seller: string;
   status: string;
   quality: string;
   rating: number;
@@ -20,6 +21,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-coffee",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlDY9ZiHnkgwa1aNBSL_GqOpCK2MjGYbRrng&s",
+    seller: "GreenGrow Supplies",
     status: "available",
     quality: "premium",
     rating: 4.6,
@@ -33,6 +35,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-fruit-cherries",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH60nmutjDFtssOcZpNBE2ggZsclkVKcYkOA&s",
+    seller: "EcoFarm Co-op",
     status: "available",
     quality: "standard",
     rating: 4.2,
@@ -46,6 +49,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-gas-burner",
     image_url:
       "https://i.pinimg.com/736x/4f/b1/37/4fb13738eb2e73a17026e2eb86e70bc1.jpg",
+    seller: "BioCycle Partners",
     status: "limited",
     quality: "standard",
     rating: 4.0,
@@ -59,6 +63,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-leaf",
     image_url:
       "https://yourcleanwater.org/wp-content/uploads/2019/10/Leaf-Bags.jpg",
+    seller: "LeafWorks Yard Supply",
     status: "available",
     quality: "bulk",
     rating: 4.1,
@@ -72,6 +77,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-sprout",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYK8LMreSYgyvN2yd53aP3wE-K8AvaDqLkDQ&s",
+    seller: "EcoFarm Co-op",
     status: "available",
     quality: "premium",
     rating: 4.7,
@@ -85,6 +91,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-palm-tree",
     image_url:
       "https://thanhcongcraft.com/wp-content/uploads/2023/10/What-can-you-do-with-coconut-husk-2.jpg",
+    seller: "Island Green Traders",
     status: "available",
     quality: "premium",
     rating: 4.8,
@@ -98,6 +105,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-cow",
     image_url:
       "https://www.treehugger.com/thmb/pQl1YDKynjU8GFrCAMyVYL5GRWA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/wheelbarrow-full-of-manure-545582750-25e7483e24c342cf9a1fe9e9d0a6731c.jpg",
+    seller: "FarmCycle Organics",
     status: "limited",
     quality: "standard",
     rating: 3.9,
@@ -111,6 +119,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-fish",
     image_url:
       "https://i.guim.co.uk/img/media/cee509aadf14be5ef241dc402f4dc5b23abac0ae/321_883_5976_3586/master/5976.jpg?width=700&quality=85&auto=format&fit=max&s=7a4e1efe6061e82eb5f9a997acb515ad",
+    seller: "Harbor Renewables",
     status: "available",
     quality: "standard",
     rating: 4.3,
@@ -124,6 +133,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-leaf",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbuimp1Sh6qAxqlmkz7TOsJIeIIEi_gjNAkg&s",
+    seller: "BioCycle Partners",
     status: "available",
     quality: "standard",
     rating: 4.5,
@@ -137,6 +147,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-corn",
     image_url:
       "https://static.wixstatic.com/media/6e2303_ff45bfcb4ae24e68b5623089406911b5~mv2.jpg/v1/fill/w_1000,h_661,al_c,q_85,usm_0.66_1.00_0.01/6e2303_ff45bfcb4ae24e68b5623089406911b5~mv2.jpg",
+    seller: "AgriLoop Collective",
     status: "available",
     quality: "standard",
     rating: 4.3,
@@ -150,6 +161,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-grass",
     image_url:
       "https://www.greenviewfertilizer.com/media/1464/grass-clippings-600.jpg",
+    seller: "LeafWorks Yard Supply",
     status: "available",
     quality: "fresh",
     rating: 4.1,
@@ -163,6 +175,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-tree",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSABlKzvXNskYexuj2ZXI16atBKRgKFe0hmsQ&s",
+    seller: "WoodCycle Hub",
     status: "available",
     quality: "mixed",
     rating: 4.0,
@@ -176,6 +189,7 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-leaf-circle",
     image_url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxzbJetEoeyILDrPJ_DpUttcrmTj8H77a2aQ&s",
+    seller: "Island Green Traders",
     status: "available",
     quality: "fresh",
     rating: 4.6,

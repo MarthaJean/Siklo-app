@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Hero from "@/pages/LandingPage.vue";
 import Auth from "@/pages/Auth.vue";
-import Dashboard from "@/pages/HomeView.vue";
+import Buyer from "@/pages/BuyerView.vue";
+import Seller from "@/pages/SellerView.vue";
 import NotFound from "@/pages/NotFound.vue";
 import ForbiddenView from "@/pages/ForbiddenView.vue";
 import AdminUserRolesView from "@/pages/admin/AdminUserRolesView.vue";
@@ -11,6 +12,8 @@ import UserManagementView from "@/pages/admin/UserManagementView.vue";
 import AnnouncementsView from "@/pages/admin/AnnouncementsView.vue";
 import SettingsView from "@/pages/account/SettingsView.vue";
 import SearchView from "@/pages/hometab/SearchView.vue";
+import CartView from "@/pages/hometab/CartView.vue";
+import ChatView from "@/pages/hometab/ChatView.vue";
 
 /**
  * Route definitions for the application
@@ -27,12 +30,30 @@ const routes = setupLayouts([
 
   {
     path: "/account/home",
-    component: Dashboard,
+    component: Buyer,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/buyer",
+    component: Buyer,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/seller",
+    component: Seller,
     meta: { requiresAuth: true },
   },
   {
     path: "/search",
     component: SearchView,
+  },
+  {
+    path: "/cart",
+    component: CartView,
+  },
+  {
+    path: "/chat",
+    component: ChatView,
   },
   {
     path: "/account/settings",

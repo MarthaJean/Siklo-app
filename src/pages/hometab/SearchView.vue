@@ -81,6 +81,10 @@
                       {{ item.tag }}
                     </div>
 
+                    <div class="text-caption text-medium-emphasis mb-3">
+                      Seller: {{ item.seller }}
+                    </div>
+
                     <div class="d-flex align-center justify-space-between mb-3">
                       <div class="text-body-2 font-weight-bold">
                         Biowaste Supply
@@ -200,12 +204,14 @@ const openRecommendation = (item: RecommendationItem) => {
   showDialog.value = true;
 };
 
-const handleAddToCart = () => {
+const handleAddToCart = (item: RecommendationItem) => {
   showDialog.value = false;
+  router.push({ path: "/cart", query: { item: item.id } });
 };
 
-const handleChat = () => {
+const handleChat = (item: RecommendationItem) => {
   showDialog.value = false;
+  router.push({ path: "/chat", query: { item: item.id } });
 };
 
 onMounted(() => {

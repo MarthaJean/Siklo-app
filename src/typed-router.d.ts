@@ -33,7 +33,10 @@ declare module 'vue-router/auto-routes' {
     '/admin/dialogs/AnnouncementDetailDialog': RouteRecordInfo<'/admin/dialogs/AnnouncementDetailDialog', '/admin/dialogs/AnnouncementDetailDialog', Record<never, never>, Record<never, never>>,
     '/admin/UserManagementView': RouteRecordInfo<'/admin/UserManagementView', '/admin/UserManagementView', Record<never, never>, Record<never, never>>,
     '/Auth': RouteRecordInfo<'/Auth', '/Auth', Record<never, never>, Record<never, never>>,
+    '/BuyerView': RouteRecordInfo<'/BuyerView', '/BuyerView', Record<never, never>, Record<never, never>>,
     '/ForbiddenView': RouteRecordInfo<'/ForbiddenView', '/ForbiddenView', Record<never, never>, Record<never, never>>,
+    '/hometab/CartView': RouteRecordInfo<'/hometab/CartView', '/hometab/CartView', Record<never, never>, Record<never, never>>,
+    '/hometab/ChatView': RouteRecordInfo<'/hometab/ChatView', '/hometab/ChatView', Record<never, never>, Record<never, never>>,
     '/hometab/components/ListingsWidget': RouteRecordInfo<'/hometab/components/ListingsWidget', '/hometab/components/ListingsWidget', Record<never, never>, Record<never, never>>,
     '/hometab/components/SearchWidget': RouteRecordInfo<'/hometab/components/SearchWidget', '/hometab/components/SearchWidget', Record<never, never>, Record<never, never>>,
     '/hometab/dialogs/ViewRecommendationsDialog': RouteRecordInfo<'/hometab/dialogs/ViewRecommendationsDialog', '/hometab/dialogs/ViewRecommendationsDialog', Record<never, never>, Record<never, never>>,
@@ -45,5 +48,6 @@ declare module 'vue-router/auto-routes' {
     '/LandingPage': RouteRecordInfo<'/LandingPage', '/LandingPage', Record<never, never>, Record<never, never>>,
     '/NotFound': RouteRecordInfo<'/NotFound', '/NotFound', Record<never, never>, Record<never, never>>,
     '/otherTab/Page1View': RouteRecordInfo<'/otherTab/Page1View', '/otherTab/Page1View', Record<never, never>, Record<never, never>>,
+    '/SellerView': RouteRecordInfo<'/SellerView', '/SellerView', Record<never, never>, Record<never, never>>,
   }
 }
