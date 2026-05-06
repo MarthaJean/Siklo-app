@@ -74,6 +74,10 @@ export const authGuard = async (
           const roleHomeRoute = getHomeRouteForRole(userRoleId);
 
           if (to.path === "/buyer" || to.path === "/seller") {
+            if (userRoleId === 1) {
+              return next();
+            }
+
             if (to.path !== roleHomeRoute) {
               return next("/forbidden");
             }

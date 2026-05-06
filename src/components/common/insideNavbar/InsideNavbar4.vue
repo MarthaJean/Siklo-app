@@ -85,8 +85,13 @@ const cartCount = computed(() => cartStore.itemCount);
 const navigationGroups = computed(() => getFilteredNavigationGroups());
 const homeRoute = computed(() =>
   getHomeRouteForRole(
-    authStore.userData?.role_id || authStore.userData?.user_metadata?.role
-  )
+    authStore.userData?.role_id || authStore.userData?.user_metadata?.role,
+  ),
+);
+const isSellerRole = computed(
+  () =>
+    (authStore.userData?.role_id || authStore.userData?.user_metadata?.role) ===
+    2,
 );
 
 function toggleTheme() {
@@ -186,6 +191,7 @@ async function handleLogout() {
       <template #append>
         <div class="d-none d-md-flex align-center">
           <v-btn
+            v-if="!isSellerRole"
             icon
             variant="text"
             size="large"
@@ -224,6 +230,7 @@ async function handleLogout() {
         <!-- Mobile Cart & Menu -->
         <div class="d-flex align-center d-md-none">
           <v-btn
+            v-if="!isSellerRole"
             icon
             variant="text"
             size="large"

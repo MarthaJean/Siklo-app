@@ -55,11 +55,11 @@ export const useUserPermissions = () => {
     }
 
     if (route === "/seller") {
-      return userRoleId.value === 2;
+      return userRoleId.value === 2 || userRoleId.value === 1;
     }
 
     if (route === "/buyer") {
-      return userRoleId.value === 3;
+      return userRoleId.value === 3 || userRoleId.value === 1;
     }
 
     // Always allow access to account pages (base user functionality)

@@ -38,6 +38,11 @@ type UpdateListingData = {
   image_url?: string | null;
 };
 
+type UploadListingImageResult = {
+  path: string;
+  publicUrl: string | null;
+};
+
 export const useListingsDataStore = defineStore("listingsData", () => {
   const supabaseImageBaseUrl = import.meta.env.VITE_SUPABASE_IMAGE_URL || "";
   const listingsImageBaseUrl = supabaseImageBaseUrl
@@ -81,6 +86,44 @@ export const useListingsDataStore = defineStore("listingsData", () => {
   // Clear error state
   const clearError = () => {
     error.value = "";
+  };
+
+  // Upload listing image to Supabase Storage bucket
+  const uploadListingImage = async (
+    file: File,
+    sellerId?: string | null,
+  ): Promise<UploadListingImageResult | null> => {
+    loading.value = true;
+    clearError();
+
+    try {
+      const safeName = file.name.replace(/\s+/g, "-");
+      const timestamp = Date.now();
+      const pathParts = [sellerId || "anonymous", `${timestamp}-${safeName}`];
+      const path = pathParts.join("/");
+
+      const { error: uploadError } = await supabase.storage
+        .from("listings")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicData } = supabase.storage
+        .from("listings")
+        .getPublicUrl(path);
+
+      return {
+        path,
+        publicUrl: publicData?.publicUrl || null,
+      };
+    } catch (err) {
+      handleError(err, "Failed to upload listing image");
+      return null;
+    } finally {
+      loading.value = false;
+    }
   };
 
   // Fetch initial listings (first page)
@@ -353,6 +396,7 @@ export const useListingsDataStore = defineStore("listingsData", () => {
     createListing,
     updateListing,
     deleteListing,
+    uploadListingImage,
     clearError,
     clearListings,
     clearCurrentListing,

@@ -107,8 +107,39 @@
                         >Delivery</span
                       >
                       <span class="text-body-2 font-weight-bold">{{
-                        formatPricePhp(150)
+                        formatPricePhp(50)
                       }}</span>
+                    </div>
+                    <div class="text-subtitle-2 font-weight-medium mb-2">
+                      Vouchers
+                    </div>
+                    <div class="d-flex flex-wrap ga-2 mb-4">
+                      <v-chip
+                        v-for="voucher in randomizedVouchers"
+                        :key="voucher.id"
+                        :color="
+                          voucher.id === selectedVoucherId
+                            ? 'primary'
+                            : 'secondary'
+                        "
+                        :variant="
+                          voucher.id === selectedVoucherId
+                            ? 'tonal'
+                            : 'outlined'
+                        "
+                        size="small"
+                        @click="toggleVoucher(voucher)"
+                      >
+                        {{ voucher.title }}
+                      </v-chip>
+                    </div>
+                    <div class="d-flex align-center justify-space-between mb-4">
+                      <span class="text-body-2 text-medium-emphasis"
+                        >Discount</span
+                      >
+                      <span class="text-body-2 font-weight-bold text-success">
+                        -{{ formatPricePhp(discountAmount) }}
+                      </span>
                     </div>
                     <v-divider class="mb-4" />
                     <div class="d-flex align-center justify-space-between">
@@ -116,7 +147,7 @@
                         >Total</span
                       >
                       <span class="text-subtitle-1 font-weight-bold">
-                        {{ formatPricePhp(subtotal + 150) }}
+                        {{ formatPricePhp(totalAmount) }}
                       </span>
                     </div>
                   </v-card-text>
@@ -136,22 +167,66 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
 import { formatPricePhp } from "@/pages/hometab/utils/helpers";
 import { recommendations } from "@/pages/hometab/data/recommendationsData";
 import { useCartDataStore } from "@/stores/cartData";
+import { vouchers } from "@/stores/vouchersData";
+import type { Voucher } from "@/stores/vouchersData";
 
 const route = useRoute();
 const router = useRouter();
 const cartStore = useCartDataStore();
 
 const defaultPrice = 150;
+const deliveryFee = 50;
+const selectedVoucherId = ref<string | null>(null);
+const randomizedVouchers = ref<Voucher[]>([...vouchers]);
 
 const cartItems = computed(() => cartStore.items);
 const itemCount = computed(() => cartStore.itemCount);
 const subtotal = computed(() => cartStore.subtotal);
+
+const selectedVoucher = computed(() =>
+  randomizedVouchers.value.find(
+    (voucher) => voucher.id === selectedVoucherId.value,
+  ),
+);
+
+const discountAmount = computed(() => {
+  const voucher = selectedVoucher.value;
+  if (!voucher) {
+    return 0;
+  }
+
+  const rawDiscount =
+    voucher.type === "percent"
+      ? (subtotal.value * voucher.value) / 100
+      : voucher.value;
+
+  return Math.min(rawDiscount, subtotal.value);
+});
+
+const totalAmount = computed(() => {
+  const total = subtotal.value + deliveryFee - discountAmount.value;
+  return Math.max(total, 0);
+});
+
+const toggleVoucher = (voucher: Voucher) => {
+  selectedVoucherId.value =
+    selectedVoucherId.value === voucher.id ? null : voucher.id;
+};
+
+const shuffleVouchers = (items: Voucher[]) => {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const nextIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[nextIndex]] = [copy[nextIndex], copy[index]];
+  }
+  return copy;
+};
 
 watch(
   () => route.query.item,
@@ -180,6 +255,10 @@ watch(
   },
   { immediate: true },
 );
+
+onMounted(() => {
+  randomizedVouchers.value = shuffleVouchers(vouchers);
+});
 
 const goBack = () => {
   if (window.history.length > 1) {
