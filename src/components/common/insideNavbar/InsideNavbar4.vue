@@ -85,8 +85,8 @@ const cartCount = computed(() => cartStore.itemCount);
 const navigationGroups = computed(() => getFilteredNavigationGroups());
 const homeRoute = computed(() =>
   getHomeRouteForRole(
-    authStore.userData?.role_id || authStore.userData?.user_metadata?.role
-  )
+    authStore.userData?.role_id || authStore.userData?.user_metadata?.role,
+  ),
 );
 
 function toggleTheme() {
