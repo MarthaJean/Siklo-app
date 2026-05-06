@@ -28,7 +28,7 @@
             </v-card>
 
             <div class="d-flex align-center justify-space-between mb-4">
-              <h2 class="text-h5 font-weight-bold">Recommendations</h2>
+              <h2 class="text-h5 font-weight-bold">AI Recommendations</h2>
               <v-chip color="primary" variant="tonal" size="small">
                 {{ filteredRecommendations.length }}
                 {{ filteredRecommendations.length === 1 ? "Item" : "Items" }}

@@ -107,7 +107,7 @@
                         >Delivery</span
                       >
                       <span class="text-body-2 font-weight-bold">{{
-                        formatPricePhp(150)
+                        formatPricePhp(50)
                       }}</span>
                     </div>
                     <v-divider class="mb-4" />
@@ -116,7 +116,7 @@
                         >Total</span
                       >
                       <span class="text-subtitle-1 font-weight-bold">
-                        {{ formatPricePhp(subtotal + 150) }}
+                        {{ formatPricePhp(subtotal + 50) }}
                       </span>
                     </div>
                   </v-card-text>
