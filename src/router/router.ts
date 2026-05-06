@@ -1,7 +1,7 @@
 import { setupLayouts } from "virtual:generated-layouts";
 import { createRouter, createWebHistory } from "vue-router";
 
-import Hero from "@/pages/index.vue";
+import Hero from "@/pages/LandingPage.vue";
 import Auth from "@/pages/Auth.vue";
 import Buyer from "@/pages/BuyerView.vue";
 import Seller from "@/pages/SellerView.vue";
