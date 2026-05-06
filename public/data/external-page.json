@@ -1,0 +1,178 @@
+{
+  "title": "Siklo",
+  "description": "Siklo: Turn farm waste into income. Connect with buyers near you.",
+  "subtitle": "Your farm waste has value. Sell it, don't burn it.",
+  "backgroundImage": {
+    "src": "/images/markup.png",
+    "alt": "Abstract academic background with geometric patterns",
+    "overlay": {
+      "enabled": true,
+      "color": "rgba(63, 81, 181, 0.15)",
+      "opacity": 0.8
+    }
+  },
+  "features": [
+    {
+      "title": "Local Buyer Matching",
+      "description": "Connect with nearby buyers looking for rice straw, corn stalks, coconut husk, and other farm byproducts.",
+      "icon": "mdi-map-marker-radius"
+    },
+    {
+      "title": "Fair Pricing Insights",
+      "description": "See transparent price ranges and demand signals so you can negotiate confidently.",
+      "icon": "mdi-currency-php"
+    },
+    {
+      "title": "Pickup & Logistics Support",
+      "description": "Coordinate pickup schedules and collection points to move materials efficiently.",
+      "icon": "mdi-truck-fast"
+    },
+    {
+      "title": "Verified Profiles",
+      "description": "Build trust with verified buyers and sellers, ratings, and transaction histories.",
+      "icon": "mdi-badge-check"
+    }
+  ],
+  "author": "Siklo Team",
+  "lastUpdated": "2024-12-24",
+  "theme": {
+    "primaryColor": "#5B9F68",
+    "secondaryColor": "#588158"
+  },
+  "ui": {
+    "showNavbar": true,
+    "showFooter": true,
+    "_comment": "Select the navbar component to use: 1, 2, 3, or 4",
+    "navbarComponent": "3",
+    "_footerComment": "Select the footer component to use: 1 or 2",
+    "footerComponent": "1",
+    "navbar": {
+      "title": "Siklo Marketplace",
+      "icon": "mdi-leaf",
+      "logo": {
+        "src": "/assets/logo.svg",
+        "alt": "Siklo Logo",
+        "width": 32,
+        "height": 32
+      },
+      "color": "primary",
+      "elevation": 2,
+      "density": "comfortable",
+      "navigationItems": [
+        {
+          "_comment": "dont change this",
+          "label": "Features",
+          "action": "scroll",
+          "target": "features"
+        },
+        {
+          "_comment": "dont change this",
+          "label": "Impact",
+          "action": "scroll",
+          "target": "about"
+        }
+      ],
+      "ctaButton": {
+        "label": "Start Selling",
+        "variant": "outlined",
+        "color": "on-primary",
+        "action": "navigate",
+        "_comment": "dont change this /auth cause it is linked to the auth page",
+        "target": "/auth"
+      }
+    },
+    "footer": {
+      "companyName": "Siklo",
+      "tagline": "Turning farm waste into value",
+      "icon": "mdi-recycle",
+      "color": "grey-darken-3",
+      "copyright": "Siklo Team. All rights reserved.",
+      "socialLinks": [
+        {
+          "platform": "github",
+          "icon": "mdi-github",
+          "url": "https://github.com",
+          "label": "GitHub"
+        },
+        {
+          "platform": "twitter",
+          "icon": "mdi-twitter",
+          "url": "https://twitter.com",
+          "label": "Twitter"
+        },
+        {
+          "platform": "linkedin",
+          "icon": "mdi-linkedin",
+          "url": "https://linkedin.com",
+          "label": "LinkedIn"
+        }
+      ],
+      "technologies": [
+        {
+          "name": "Waste Marketplace",
+          "icon": "mdi-storefront",
+          "color": "green"
+        },
+        {
+          "name": "Local Logistics",
+          "icon": "mdi-truck",
+          "color": "blue"
+        },
+        {
+          "name": "Verified Community",
+          "icon": "mdi-account-check",
+          "color": "indigo"
+        },
+        {
+          "name": "Sustainable Impact",
+          "icon": "mdi-sprout",
+          "color": "teal"
+        }
+      ],
+      "thesisTeam": {
+        "enabled": true,
+        "title": "Community Team",
+        "subtitle": "Meet the people building the circular farm economy",
+        "members": [
+          {
+            "name": "Jean Martha Tello",
+            "role": "CEO",
+            "avatar": "/images/team/architect.jpg"
+          },
+          {
+            "name": "Richard Dambe JollyHotdog",
+            "role": "CTO",
+            "avatar": "/images/team/auth-specialist.jpg"
+          },
+          {
+            "name": "Shayna McCafe",
+            "role": "CMO",
+            "avatar": "/images/team/ui-developer.jpg"
+          }
+        ]
+      }
+    }
+  },
+  "authPage": {
+    "title": "Welcome to Siklo",
+    "subtitle": "Sign in to sell farm waste and connect with trusted buyers",
+    "layout": {
+      "quotePosition": "right"
+    },
+    "quote": {
+      "text": "Waste is only waste if we waste it.",
+      "author": "Will.i.am",
+      "source": "Artist and Innovator",
+      "motivationalText": "Turn byproducts into income while keeping your community clean."
+    },
+    "backgroundImage": {
+      "src": "/images/auth-background.jpg",
+      "alt": "Modern academic workspace with books and technology",
+      "overlay": {
+        "enabled": true,
+        "color": "rgba(63, 81, 181, 0.1)",
+        "opacity": 0.9
+      }
+    }
+  }
+}

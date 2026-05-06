@@ -1,0 +1,10 @@
+{
+  "versions": [
+    {
+      "version": "v0.0.1",
+      "date": "2026-02-01",
+      "title": "Initial Release",
+      "changes": ["User authentication and role management"]
+    }
+  ]
+}
