@@ -1,32 +1,31 @@
-
 <script setup lang="ts">
-import { useAuthUserStore } from '@/stores/authUser'
-import { useToast } from 'vue-toastification'
-import { storeToRefs } from 'pinia'
-import InnerLayoutWrapper from '@/layouts/InnerLayoutWrapper.vue'
-import HomeLogs from '@/pages/hometab/HomeLogs.vue'
-import HomeAnnouncements from '@/pages/hometab/HomeAnnouncements.vue'
+import { useAuthUserStore } from "@/stores/authUser";
+import { useToast } from "vue-toastification";
+import { storeToRefs } from "pinia";
+import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
+import HomeLogs from "@/pages/hometab/HomeLogs.vue";
+import HomeAnnouncements from "@/pages/hometab/HomeAnnouncements.vue";
 
-const authStore = useAuthUserStore()
-const toast = useToast()
+const authStore = useAuthUserStore();
+const toast = useToast();
 
 // Reactive references from the auth store
-const { userName, loading } = storeToRefs(authStore)
+const { userName, loading } = storeToRefs(authStore);
 
 const handleLogout = async () => {
   try {
-    const result = await authStore.signOut()
+    const result = await authStore.signOut();
 
     if (result.error) {
-      toast.error('Logout failed: ' + result.error.message)
+      toast.error("Logout failed: " + result.error.message);
     } else {
-      toast.success('You have been logged out successfully')
+      toast.success("You have been logged out successfully");
     }
   } catch (error) {
-    console.error('Logout error:', error)
-    toast.error('An unexpected error occurred during logout')
+    console.error("Logout error:", error);
+    toast.error("An unexpected error occurred during logout");
   }
-}
+};
 </script>
 
 <template>
@@ -57,4 +56,3 @@ const handleLogout = async () => {
     </template>
   </InnerLayoutWrapper>
 </template>
-
