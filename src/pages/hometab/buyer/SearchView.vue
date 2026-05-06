@@ -155,9 +155,9 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
-import { recommendations } from "@/pages/hometab/buyer/data/recommendationsData";
-import type { RecommendationItem } from "@/pages/hometab/buyer/data/recommendationsData";
-import ViewRecommendationsDialog from "@/pages/hometab/buyer/dialogs/ViewRecommendationsDialog.vue";
+import { recommendations } from "@/pages/hometab/data/recommendationsData";
+import type { RecommendationItem } from "@/pages/hometab/data/recommendationsData";
+import ViewRecommendationsDialog from "@/pages/hometab/dialogs/ViewRecommendationsDialog.vue";
 import { useCartDataStore } from "@/stores/cartData";
 
 const route = useRoute();
@@ -172,7 +172,7 @@ const filteredRecommendations = computed(() => {
   const term = query.value.trim().toLowerCase();
   if (!term) return recommendations;
 
-  return recommendations.filter((item) => {
+  return recommendations.filter((item: RecommendationItem) => {
     return (
       item.title.toLowerCase().includes(term) ||
       item.subtitle.toLowerCase().includes(term) ||
