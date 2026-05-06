@@ -158,18 +158,52 @@ import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
 import { recommendations } from "@/pages/hometab/data/recommendationsData";
 import type { RecommendationItem } from "@/pages/hometab/data/recommendationsData";
 import ViewRecommendationsDialog from "@/pages/hometab/dialogs/ViewRecommendationsDialog.vue";
+import { useListingsDataStore } from "@/stores/listingsData";
 
 const route = useRoute();
 const router = useRouter();
+const listingsStore = useListingsDataStore();
 const query = ref("");
 const showDialog = ref(false);
 const selectedRecommendation = ref<RecommendationItem | null>(null);
+const randomizedRecommendations = ref<RecommendationItem[]>([]);
+
+const listingsRecommendations = computed<RecommendationItem[]>(() => {
+  return listingsStore.listings.map((listing) => {
+    return {
+      id: `listing-${listing.id}`,
+      title: listing.title || "Untitled listing",
+      subtitle: listing.description || listing.type || "Community listing",
+      tag: listing.type || "Listing",
+      icon: "mdi-recycle",
+      image_url: listing.image_url || "",
+      seller: listing.seller_id || "Seller",
+      status: listing.status || "available",
+      quality: listing.quality || "standard",
+      rating: 0,
+      reviews: 0,
+    };
+  });
+});
+
+const mergedRecommendations = computed<RecommendationItem[]>(() => {
+  return [...listingsRecommendations.value, ...recommendations];
+});
+
+const shuffleRecommendations = (items: RecommendationItem[]) => {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const nextIndex = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[nextIndex]] = [copy[nextIndex], copy[index]];
+  }
+  return copy;
+};
 
 const filteredRecommendations = computed(() => {
   const term = query.value.trim().toLowerCase();
-  if (!term) return recommendations;
+  if (!term) return randomizedRecommendations.value;
 
-  return recommendations.filter((item) => {
+  return randomizedRecommendations.value.filter((item) => {
     return (
       item.title.toLowerCase().includes(term) ||
       item.subtitle.toLowerCase().includes(term) ||
@@ -182,6 +216,14 @@ watch(
   () => route.query.q,
   (value) => {
     query.value = typeof value === "string" ? value : "";
+  },
+  { immediate: true },
+);
+
+watch(
+  () => mergedRecommendations.value,
+  (value) => {
+    randomizedRecommendations.value = shuffleRecommendations(value);
   },
   { immediate: true },
 );
@@ -215,6 +257,7 @@ const handleChat = (item: RecommendationItem) => {
 };
 
 onMounted(() => {
+  void listingsStore.fetchListings(true);
   window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 });
 </script>
