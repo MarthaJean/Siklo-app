@@ -1,12 +1,21 @@
-import { useToast } from 'vue-toastification';
-import { useAuthUserStore } from '@/stores/authUser';
-import { useUserPagesStore } from '@/stores/pages';
-import type { RouteLocationNormalized, NavigationGuardNext, Router } from 'vue-router';
+import { useToast } from "vue-toastification";
+import { useAuthUserStore } from "@/stores/authUser";
+import { useUserPagesStore } from "@/stores/pages";
+import { getHomeRouteForRole } from "@/utils/navigation";
+import type {
+  RouteLocationNormalized,
+  NavigationGuardNext,
+  Router,
+} from "vue-router";
 
 /**
  * Authentication and role-based page access guard
  */
-export const authGuard = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+export const authGuard = async (
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  next: NavigationGuardNext,
+) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const publicPages = ["/", "/auth"];
   const toast = useToast();
@@ -20,7 +29,30 @@ export const authGuard = async (to: RouteLocationNormalized, from: RouteLocation
   // If user is authenticated and trying to access public/auth pages, redirect to dashboard
   if (isLoggedIn && publicPages.includes(to.path)) {
     /*  toast.info("You are already logged in. Redirecting to home."); */
-    return next("/account/home");
+    const authStore = useAuthUserStore();
+    let roleId =
+      authStore.userData?.role_id || authStore.userData?.user_metadata?.role;
+
+    if (!roleId) {
+      const currentUserResult = await authStore.getCurrentUser();
+      roleId = currentUserResult.user?.user_metadata?.role;
+    }
+
+    return next(getHomeRouteForRole(roleId));
+  }
+
+  // Redirect legacy home to role-based home
+  if (isLoggedIn && to.path === "/account/home") {
+    const authStore = useAuthUserStore();
+    let roleId =
+      authStore.userData?.role_id || authStore.userData?.user_metadata?.role;
+
+    if (!roleId) {
+      const currentUserResult = await authStore.getCurrentUser();
+      roleId = currentUserResult.user?.user_metadata?.role;
+    }
+
+    return next(getHomeRouteForRole(roleId));
   }
 
   // Check role-based page access for authenticated users on protected routes
@@ -36,36 +68,53 @@ export const authGuard = async (to: RouteLocationNormalized, from: RouteLocation
         const userRoleId = currentUserResult.user.user_metadata?.role;
 
         if (userRoleId) {
-          console.log('Checking page access for role ID:', userRoleId);
-          console.log('Requested path:', to.path);
+          console.log("Checking page access for role ID:", userRoleId);
+          console.log("Requested path:", to.path);
+
+          const roleHomeRoute = getHomeRouteForRole(userRoleId);
+
+          if (to.path === "/buyer" || to.path === "/seller") {
+            if (to.path !== roleHomeRoute) {
+              return next("/forbidden");
+            }
+
+            return next();
+          }
 
           // Fetch pages accessible by this role
           const rolePages = await pagesStore.fetchRolePagesByRoleId(userRoleId);
 
           if (rolePages && rolePages.length > 0) {
             // Check if the current path is in the allowed pages
-            const allowedPages = rolePages.map(rolePage => rolePage.pages).filter(Boolean);
+            const allowedPages = rolePages
+              .map((rolePage) => rolePage.pages)
+              .filter(Boolean);
             const isPageAllowed = allowedPages.includes(to.path);
 
-            console.log('Allowed pages for role:', allowedPages);
-            console.log('Is page allowed:', isPageAllowed);
+            console.log("Allowed pages for role:", allowedPages);
+            console.log("Is page allowed:", isPageAllowed);
 
             if (!isPageAllowed) {
-              console.log('Access denied for path:', to.path, 'Role ID:', userRoleId);
+              console.log(
+                "Access denied for path:",
+                to.path,
+                "Role ID:",
+                userRoleId,
+              );
               return next("/forbidden"); // Redirect to forbidden page if access denied
             }
           } else {
             // No pages defined for this role - redirect to forbidden page
-            console.log('No pages configured for role ID:', userRoleId);
+            console.log("No pages configured for role ID:", userRoleId);
             return next("/forbidden");
           }
         } else {
-          console.log('No role ID found in user metadata');
+          console.log("No role ID found in user metadata");
           // If no role ID, allow access but log the issue
         }
       }
     } catch (error) {
-      console.error('Error checking role-based page access:', error);
+      console.error("Error checking role-based page access:", error);
       // Continue with navigation if there's an error to avoid blocking the user
     }
   }

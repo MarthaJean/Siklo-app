@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { UIConfig, LogoConfig } from "@/controller/landingController";
+import type { UIConfig } from "@/controller/landingController";
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { useTheme } from "@/composables/useTheme";
@@ -7,11 +7,8 @@ import { useDisplay } from "vuetify";
 import { useAuthUserStore } from "@/stores/authUser";
 import { useCartDataStore } from "@/stores/cartData";
 import SlugName from "./SlugName.vue";
-import {
-  navigationConfig,
-  type NavigationGroup,
-  type NavigationItem,
-} from "@/utils/navigation";
+import { useUserPermissions } from "@/composables/useUserPermissions";
+import { getHomeRouteForRole } from "@/utils/navigation";
 
 interface Props {
   config?: UIConfig | null;
@@ -21,6 +18,8 @@ const props = defineProps<Props>();
 const router = useRouter();
 const authStore = useAuthUserStore();
 const cartStore = useCartDataStore();
+const { getFilteredNavigationGroups, hasAccessToRoute, isLoading } =
+  useUserPermissions();
 
 // Responsive breakpoints
 const { mobile } = useDisplay();
@@ -83,6 +82,12 @@ const themeTooltip = computed(() => {
   return `Switch to ${currentTheme.value === "dark" ? "light" : "dark"} theme`;
 });
 const cartCount = computed(() => cartStore.itemCount);
+const navigationGroups = computed(() => getFilteredNavigationGroups());
+const homeRoute = computed(() =>
+  getHomeRouteForRole(
+    authStore.userData?.role_id || authStore.userData?.user_metadata?.role
+  )
+);
 
 function toggleTheme() {
   handleToggleTheme();
@@ -326,7 +331,11 @@ async function handleLogout() {
 
       <!-- Navigation Menu -->
       <v-list nav class="px-2">
-        <template v-for="group in navigationConfig" :key="group.title">
+        <div v-if="isLoading" class="text-center py-4">
+          <v-progress-circular indeterminate color="primary" size="28" />
+        </div>
+
+        <template v-else v-for="group in navigationGroups" :key="group.title">
           <!-- Navigation Group -->
           <v-list-group :value="group.title">
             <template #activator="{ props: activatorProps }">
@@ -356,6 +365,7 @@ async function handleLogout() {
         <v-divider class="my-3 mx-3" />
 
         <v-list-item
+          v-if="hasAccessToRoute('/cart')"
           prepend-icon="mdi-cart"
           title="Cart"
           to="/cart"
@@ -364,14 +374,16 @@ async function handleLogout() {
           @click="mobileDrawer = false"
         />
         <v-list-item
+          v-if="hasAccessToRoute(homeRoute)"
           prepend-icon="mdi-view-dashboard"
           title="Dashboard"
-          to="/account/home"
+          :to="homeRoute"
           rounded="xl"
           class="ma-1"
           @click="mobileDrawer = false"
         />
         <v-list-item
+          v-if="hasAccessToRoute('/account/settings')"
           prepend-icon="mdi-cog-outline"
           title="Account Settings"
           to="/account/settings"

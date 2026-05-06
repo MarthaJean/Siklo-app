@@ -3,7 +3,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import Hero from "@/pages/index.vue";
 import Auth from "@/pages/Auth.vue";
-import Dashboard from "@/pages/HomeView.vue";
+import Buyer from "@/pages/BuyerView.vue";
+import Seller from "@/pages/SellerView.vue";
 import NotFound from "@/pages/NotFound.vue";
 import ForbiddenView from "@/pages/ForbiddenView.vue";
 import AdminUserRolesView from "@/pages/admin/AdminUserRolesView.vue";
@@ -29,7 +30,17 @@ const routes = setupLayouts([
 
   {
     path: "/account/home",
-    component: Dashboard,
+    component: Buyer,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/buyer",
+    component: Buyer,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/seller",
+    component: Seller,
     meta: { requiresAuth: true },
   },
   {
