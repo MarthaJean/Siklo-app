@@ -61,7 +61,12 @@
           md="4"
           lg="3"
         >
-          <v-card class="listing-card h-100" variant="outlined" hover>
+          <v-card
+            class="listing-card h-100"
+            variant="outlined"
+            hover
+            @click="openListing(listing)"
+          >
             <!-- Image -->
             <div class="image-container">
               <v-img
@@ -157,14 +162,25 @@
         </v-col>
       </v-row>
     </div>
+
+    <ViewRecommendationsDialog
+      v-model="showDialog"
+      :recommendation="selectedRecommendation"
+      @add-to-cart="handleAddToCart"
+      @chat="handleChat"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { useListingsDataStore } from "@/stores/listingsData";
+import { useCartDataStore } from "@/stores/cartData";
 import { useTransactionsDataStore } from "@/stores/transactionsData";
 import SearchWidget from "@/pages/hometab/components/SearchWidget.vue";
+import ViewRecommendationsDialog from "@/pages/hometab/dialogs/ViewRecommendationsDialog.vue";
+import type { RecommendationItem } from "@/pages/hometab/data/recommendationsData";
 import {
   formatPricePhp,
   formatShortDate,
@@ -172,8 +188,13 @@ import {
   getRatingValue,
 } from "@/pages/hometab/utils/helpers";
 
+const router = useRouter();
 const listingsStore = useListingsDataStore();
 const transactionsStore = useTransactionsDataStore();
+const cartStore = useCartDataStore();
+const defaultPrice = 150;
+const showDialog = ref(false);
+const selectedRecommendation = ref<RecommendationItem | null>(null);
 
 const previewListings = computed(() => listingsStore.listings.slice(0, 8));
 
@@ -196,6 +217,47 @@ const listingRatings = computed(() => {
 
   return map;
 });
+
+const openListing = (listing: (typeof listingsStore.listings)[number]) => {
+  selectedRecommendation.value = {
+    id: `listing-${listing.id}`,
+    title: listing.title || "Untitled Listing",
+    subtitle: listing.description || listing.type || "Community listing",
+    tag: listing.type || "Listing",
+    icon: "mdi-recycle",
+    image_url: listing.image_url || "",
+    seller: listing.seller_id || "Seller",
+    status: listing.status || "available",
+    quality: listing.quality || "standard",
+    rating: getRatingValue(listingRatings.value, listing.id),
+    reviews: listingRatings.value.get(listing.id)?.count || 0,
+  };
+  showDialog.value = true;
+};
+
+const handleAddToCart = (item: RecommendationItem) => {
+  showDialog.value = false;
+  const existing = cartStore.getItemById(item.id);
+  if (existing) {
+    cartStore.updateQuantity(item.id, existing.quantity + 1);
+  } else {
+    cartStore.addItem({
+      id: item.id,
+      title: item.title,
+      subtitle: item.subtitle,
+      tag: item.tag,
+      price: defaultPrice,
+      quantity: 1,
+      image_url: item.image_url,
+    });
+  }
+  router.push({ path: "/cart" });
+};
+
+const handleChat = (item: RecommendationItem) => {
+  showDialog.value = false;
+  router.push({ path: "/chat", query: { item: item.id } });
+};
 
 onMounted(async () => {
   await listingsStore.fetchListings(true);
