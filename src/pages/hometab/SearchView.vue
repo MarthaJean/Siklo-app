@@ -4,6 +4,15 @@
       <v-container fluid class="pa-0">
         <section class="search-view-section">
           <v-container>
+            <div class="d-flex align-center mb-4">
+              <v-btn
+                variant="text"
+                prepend-icon="mdi-arrow-left"
+                @click="goBack"
+              >
+                Back
+              </v-btn>
+            </div>
             <v-card class="search-card mb-6" variant="outlined">
               <v-card-text class="pa-4">
                 <v-text-field
@@ -30,7 +39,7 @@
               <v-col
                 v-for="item in filteredRecommendations"
                 :key="item.id"
-                cols="12"
+                cols="6"
                 sm="6"
                 md="4"
                 lg="3"
@@ -42,26 +51,83 @@
                 >
                   <div class="image-container">
                     <v-img
+                      v-if="item.image_url"
                       :src="item.image_url"
                       height="180"
                       cover
                       class="recommendation-image"
                     />
+                    <div
+                      v-else
+                      class="no-image-placeholder d-flex align-center justify-center"
+                    >
+                      <v-icon
+                        icon="mdi-image-outline"
+                        size="40"
+                        color="grey-lighten-1"
+                      />
+                    </div>
                   </div>
 
                   <v-card-text class="pa-4">
-                    <div class="d-flex align-center justify-space-between mb-2">
-                      <h3 class="text-subtitle-1 font-weight-bold line-clamp-2">
-                        {{ item.title }}
-                      </h3>
-                      <v-icon :icon="item.icon" color="primary" />
-                    </div>
-                    <p class="text-body-2 text-medium-emphasis mb-3">
-                      {{ item.subtitle }}
-                    </p>
-                    <v-chip size="x-small" variant="tonal" color="secondary">
+                    <h3
+                      class="text-subtitle-1 font-weight-bold mb-2 line-clamp-2"
+                    >
+                      {{ item.title }}
+                    </h3>
+
+                    <div class="text-body-2 text-medium-emphasis mb-3">
                       {{ item.tag }}
-                    </v-chip>
+                    </div>
+
+                    <div class="d-flex align-center justify-space-between mb-3">
+                      <div class="text-body-2 font-weight-bold">
+                        Biowaste Supply
+                      </div>
+                      <v-chip
+                        v-if="item.status"
+                        color="primary"
+                        size="x-small"
+                        variant="tonal"
+                        class="text-capitalize"
+                      >
+                        {{ item.status }}
+                      </v-chip>
+                    </div>
+
+                    <div class="d-flex align-center justify-space-between mb-2">
+                      <v-rating
+                        :model-value="item.rating"
+                        color="yellow-darken-2"
+                        size="14"
+                        density="compact"
+                        half-increments
+                        readonly
+                        class="recommendation-rating"
+                      />
+                      <span class="text-caption text-medium-emphasis">
+                        {{ getReviewLabel(item.reviews) }}
+                      </span>
+                    </div>
+
+                    <div
+                      class="d-flex align-center justify-space-between text-caption text-medium-emphasis"
+                    >
+                      <span>
+                        <v-icon start size="14">mdi-information</v-icon>
+                        {{ item.subtitle }}
+                      </span>
+
+                      <v-chip
+                        v-if="item.quality"
+                        color="secondary"
+                        variant="tonal"
+                        size="x-small"
+                        class="text-capitalize"
+                      >
+                        {{ item.quality }}
+                      </v-chip>
+                    </div>
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -74,12 +140,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
 import { recommendations } from "@/pages/hometab/data/recommendationsData";
 
 const route = useRoute();
+const router = useRouter();
 const query = ref("");
 
 const filteredRecommendations = computed(() => {
@@ -102,6 +169,23 @@ watch(
   },
   { immediate: true },
 );
+
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    router.push("/");
+  }
+};
+
+const getReviewLabel = (count: number) => {
+  if (!count) return "No ratings";
+  return `${count} ${count === 1 ? "review" : "reviews"}`;
+};
+
+onMounted(() => {
+  window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+});
 </script>
 
 <style scoped>
@@ -132,6 +216,12 @@ watch(
 
 .recommendation-card:hover .recommendation-image {
   transform: scale(1.04);
+}
+
+.no-image-placeholder {
+  height: 180px;
+  background: rgba(var(--v-theme-surface-variant), 0.3);
+  border-bottom: 1px solid rgba(var(--v-border-color), 0.12);
 }
 
 .line-clamp-2 {

@@ -5,6 +5,10 @@ export type RecommendationItem = {
   tag: string;
   icon: string;
   image_url: string;
+  status: string;
+  quality: string;
+  rating: number;
+  reviews: number;
 };
 
 export const recommendations: RecommendationItem[] = [
@@ -16,6 +20,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-coffee",
     image_url:
       "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "premium",
+    rating: 4.6,
+    reviews: 38,
   },
   {
     id: "kitchen-scraps",
@@ -25,6 +33,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-fruit-cherries",
     image_url:
       "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "standard",
+    rating: 4.2,
+    reviews: 21,
   },
   {
     id: "food-waste",
@@ -34,6 +46,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-gas-burner",
     image_url:
       "https://images.unsplash.com/photo-1483137140003-ae073b395549?auto=format&fit=crop&w=800&q=80",
+    status: "limited",
+    quality: "standard",
+    rating: 4.0,
+    reviews: 16,
   },
   {
     id: "yard-waste",
@@ -43,6 +59,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-leaf",
     image_url:
       "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "bulk",
+    rating: 4.1,
+    reviews: 12,
   },
   {
     id: "rice-husks",
@@ -52,6 +72,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-sprout",
     image_url:
       "https://images.unsplash.com/photo-1470004914212-05527e49370b?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "premium",
+    rating: 4.7,
+    reviews: 29,
   },
   {
     id: "coconut-husks",
@@ -61,6 +85,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-palm-tree",
     image_url:
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "premium",
+    rating: 4.8,
+    reviews: 44,
   },
   {
     id: "manure",
@@ -70,6 +98,10 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-cow",
     image_url:
       "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=800&q=80",
+    status: "limited",
+    quality: "standard",
+    rating: 3.9,
+    reviews: 9,
   },
   {
     id: "fish-waste",
@@ -79,5 +111,9 @@ export const recommendations: RecommendationItem[] = [
     icon: "mdi-fish",
     image_url:
       "https://images.unsplash.com/photo-1502741338009-cac2772e18bc?auto=format&fit=crop&w=800&q=80",
+    status: "available",
+    quality: "standard",
+    rating: 4.3,
+    reviews: 19,
   },
 ];
