@@ -1,83 +1,100 @@
 <script lang="ts" setup>
-  import type { UIConfig, LogoConfig } from '@/controller/landingController'
-  import { computed, ref, onMounted, onUnmounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useTheme } from '@/composables/useTheme'
-  import { useDisplay } from 'vuetify'
-  import { useAuthUserStore } from '@/stores/authUser'
-  import SlugName from './SlugName.vue'
-  import { navigationConfig, type NavigationGroup, type NavigationItem } from '@/utils/navigation'
+import type { UIConfig, LogoConfig } from "@/controller/landingController";
+import { computed, ref, onMounted, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+import { useTheme } from "@/composables/useTheme";
+import { useDisplay } from "vuetify";
+import { useAuthUserStore } from "@/stores/authUser";
+import { useCartDataStore } from "@/stores/cartData";
+import SlugName from "./SlugName.vue";
+import {
+  navigationConfig,
+  type NavigationGroup,
+  type NavigationItem,
+} from "@/utils/navigation";
 
-  interface Props {
-    config?: UIConfig | null
+interface Props {
+  config?: UIConfig | null;
+}
+
+const props = defineProps<Props>();
+const router = useRouter();
+const authStore = useAuthUserStore();
+const cartStore = useCartDataStore();
+
+// Responsive breakpoints
+const { mobile } = useDisplay();
+
+// Mobile drawer state
+const mobileDrawer = ref(false);
+
+// Theme management
+const {
+  toggleTheme: handleToggleTheme,
+  getCurrentTheme,
+  isLoadingTheme,
+} = useTheme();
+
+// Scroll detection for mobile drawer auto-close
+let lastScrollY = ref(0);
+let ticking = ref(false);
+
+const handleScroll = () => {
+  if (!ticking.value) {
+    requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY;
+
+      // Close mobile drawer when scrolling down
+      if (
+        mobile.value &&
+        mobileDrawer.value &&
+        currentScrollY > lastScrollY.value
+      ) {
+        mobileDrawer.value = false;
+      }
+
+      lastScrollY.value = currentScrollY;
+      ticking.value = false;
+    });
+    ticking.value = true;
   }
+};
 
-  const props = defineProps<Props>()
-  const router = useRouter()
-  const authStore = useAuthUserStore()
+// Add scroll listener on mount, remove on unmount
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  lastScrollY.value = window.scrollY;
+});
 
-  // Responsive breakpoints
-  const { mobile } = useDisplay()
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 
-  // Mobile drawer state
-  const mobileDrawer = ref(false)
+const navbarConfig = computed(() => props.config?.navbar);
 
-  // Theme management
-  const { toggleTheme: handleToggleTheme, getCurrentTheme, isLoadingTheme } = useTheme()
+// Theme toggle computed properties
+const currentTheme = computed(() => getCurrentTheme());
+const themeIcon = computed(() => {
+  return currentTheme.value === "dark"
+    ? "mdi-white-balance-sunny"
+    : "mdi-weather-night";
+});
+const themeTooltip = computed(() => {
+  return `Switch to ${currentTheme.value === "dark" ? "light" : "dark"} theme`;
+});
+const cartCount = computed(() => cartStore.itemCount);
 
-  // Scroll detection for mobile drawer auto-close
-  let lastScrollY = ref(0)
-  let ticking = ref(false)
+function toggleTheme() {
+  handleToggleTheme();
+}
 
-  const handleScroll = () => {
-    if (!ticking.value) {
-      requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY
-
-        // Close mobile drawer when scrolling down
-        if (mobile.value && mobileDrawer.value && currentScrollY > lastScrollY.value) {
-          mobileDrawer.value = false
-        }
-
-        lastScrollY.value = currentScrollY
-        ticking.value = false
-      })
-      ticking.value = true
-    }
+async function handleLogout() {
+  try {
+    await authStore.signOut();
+  } catch (error) {
+    console.error("Logout failed:", error);
   }
-
-  // Add scroll listener on mount, remove on unmount
-  onMounted(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    lastScrollY.value = window.scrollY
-  })
-
-  onUnmounted(() => {
-    window.removeEventListener('scroll', handleScroll)
-  })
-
-  const navbarConfig = computed(() => props.config?.navbar)
-
-  // Theme toggle computed properties
-  const currentTheme = computed(() => getCurrentTheme())
-  const themeIcon = computed(() => {
-    return currentTheme.value === 'dark' ? 'mdi-white-balance-sunny' : 'mdi-weather-night'
-  })
-  const themeTooltip = computed(() => {
-    return `Switch to ${currentTheme.value === 'dark' ? 'light' : 'dark'} theme`
-  })
-
-  function toggleTheme () {
-    handleToggleTheme()
-  }
-
-  async function handleLogout () {
-    try {
-      await authStore.signOut()
-    } catch (error) {
-      console.error('Logout failed:', error)
-    }
-  }
+}
 </script>
 
 <template>
@@ -103,8 +120,16 @@
             <v-img
               :src="navbarConfig.logo.src"
               :alt="navbarConfig.logo.alt"
-              :width="mobile ? (navbarConfig.logo.width || 36) : (navbarConfig.logo.width || 44)"
-              :height="mobile ? (navbarConfig.logo.height || 36) : (navbarConfig.logo.height || 44)"
+              :width="
+                mobile
+                  ? navbarConfig.logo.width || 36
+                  : navbarConfig.logo.width || 44
+              "
+              :height="
+                mobile
+                  ? navbarConfig.logo.height || 36
+                  : navbarConfig.logo.height || 44
+              "
               class="me-3 brand-avatar"
               contain
             >
@@ -155,6 +180,23 @@
       <!-- Desktop Action Buttons -->
       <template #append>
         <div class="d-none d-md-flex align-center">
+          <v-btn
+            icon
+            variant="text"
+            size="large"
+            class="me-2"
+            @click="router.push('/cart')"
+          >
+            <v-badge
+              :content="cartCount"
+              :model-value="cartCount > 0"
+              color="primary"
+              offset-x="2"
+              offset-y="2"
+            >
+              <v-icon icon="mdi-cart" />
+            </v-badge>
+          </v-btn>
           <!-- Theme Toggle -->
           <v-btn
             :icon="themeIcon"
@@ -164,7 +206,7 @@
             :loading="isLoadingTheme"
             @click="toggleTheme"
           >
-          <v-icon></v-icon>
+            <v-icon></v-icon>
             <v-tooltip activator="parent" location="bottom">
               {{ themeTooltip }}
             </v-tooltip>
@@ -174,14 +216,32 @@
           <SlugName />
         </div>
 
-        <!-- Mobile Menu Toggle -->
-        <v-btn
-          icon="mdi-menu"
-          variant="text"
-          size="large"
-          class="d-md-none"
-          @click="mobileDrawer = !mobileDrawer"
-        />
+        <!-- Mobile Cart & Menu -->
+        <div class="d-flex align-center d-md-none">
+          <v-btn
+            icon
+            variant="text"
+            size="large"
+            class="me-1"
+            @click="router.push('/cart')"
+          >
+            <v-badge
+              :content="cartCount"
+              :model-value="cartCount > 0"
+              color="primary"
+              offset-x="2"
+              offset-y="2"
+            >
+              <v-icon icon="mdi-cart" />
+            </v-badge>
+          </v-btn>
+          <v-btn
+            icon="mdi-menu"
+            variant="text"
+            size="large"
+            @click="mobileDrawer = !mobileDrawer"
+          />
+        </div>
       </template>
     </v-app-bar>
 
@@ -207,8 +267,16 @@
             <v-img
               :src="navbarConfig.logo.src"
               :alt="navbarConfig.logo.alt"
-              :width="mobile ? (navbarConfig.logo.width || 48) : (navbarConfig.logo.width || 56)"
-              :height="mobile ? (navbarConfig.logo.height || 48) : (navbarConfig.logo.height || 56)"
+              :width="
+                mobile
+                  ? navbarConfig.logo.width || 48
+                  : navbarConfig.logo.width || 56
+              "
+              :height="
+                mobile
+                  ? navbarConfig.logo.height || 48
+                  : navbarConfig.logo.height || 56
+              "
               class="me-4"
               contain
             >
@@ -249,9 +317,7 @@
             <h3 class="text-h6 font-weight-bold">
               {{ navbarConfig.title }}
             </h3>
-            <p class="text-caption opacity-80 mb-0">
-              Academic Platform
-            </p>
+            <p class="text-caption opacity-80 mb-0">Academic Platform</p>
           </div>
         </div>
       </v-card>
@@ -290,6 +356,14 @@
         <v-divider class="my-3 mx-3" />
 
         <v-list-item
+          prepend-icon="mdi-cart"
+          title="Cart"
+          to="/cart"
+          rounded="xl"
+          class="ma-1"
+          @click="mobileDrawer = false"
+        />
+        <v-list-item
           prepend-icon="mdi-view-dashboard"
           title="Dashboard"
           to="/account/home"
@@ -316,11 +390,7 @@
 
       <!-- Mobile Actions -->
       <template #append>
-        <v-card
-          class="ma-4 pa-4"
-          variant="outlined"
-          rounded="xl"
-        >
+        <v-card class="ma-4 pa-4" variant="outlined" rounded="xl">
           <!-- Theme Toggle -->
           <v-btn
             block
@@ -332,7 +402,7 @@
             @click="toggleTheme"
             class="text-caption mb-3"
           >
-            {{ currentTheme === 'dark' ? 'Light' : 'Dark' }}
+            {{ currentTheme === "dark" ? "Light" : "Dark" }}
           </v-btn>
         </v-card>
       </template>
@@ -422,7 +492,10 @@
 
 /* Smooth transitions for theme changes */
 * {
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 /* Enhanced Mobile Drawer Styling */
@@ -441,7 +514,7 @@
 }
 
 .mobile-drawer .v-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

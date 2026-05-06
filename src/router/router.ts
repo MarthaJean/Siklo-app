@@ -11,6 +11,8 @@ import UserManagementView from "@/pages/admin/UserManagementView.vue";
 import AnnouncementsView from "@/pages/admin/AnnouncementsView.vue";
 import SettingsView from "@/pages/account/SettingsView.vue";
 import SearchView from "@/pages/hometab/SearchView.vue";
+import CartView from "@/pages/hometab/CartView.vue";
+import ChatView from "@/pages/hometab/ChatView.vue";
 
 /**
  * Route definitions for the application
@@ -33,6 +35,14 @@ const routes = setupLayouts([
   {
     path: "/search",
     component: SearchView,
+  },
+  {
+    path: "/cart",
+    component: CartView,
+  },
+  {
+    path: "/chat",
+    component: ChatView,
   },
   {
     path: "/account/settings",
