@@ -286,6 +286,32 @@
             />
           </v-list-group>
         </template>
+
+        <v-divider class="my-3 mx-3" />
+
+        <v-list-item
+          prepend-icon="mdi-view-dashboard"
+          title="Dashboard"
+          to="/account/home"
+          rounded="xl"
+          class="ma-1"
+          @click="mobileDrawer = false"
+        />
+        <v-list-item
+          prepend-icon="mdi-cog-outline"
+          title="Account Settings"
+          to="/account/settings"
+          rounded="xl"
+          class="ma-1"
+          @click="mobileDrawer = false"
+        />
+        <v-list-item
+          prepend-icon="mdi-logout"
+          title="Logout"
+          rounded="xl"
+          class="ma-1"
+          @click="handleLogout"
+        />
       </v-list>
 
       <!-- Mobile Actions -->
@@ -308,9 +334,6 @@
           >
             {{ currentTheme === 'dark' ? 'Light' : 'Dark' }}
           </v-btn>
-
-          <!-- User Menu with SlugName -->
-          <SlugName />
         </v-card>
       </template>
     </v-navigation-drawer>
