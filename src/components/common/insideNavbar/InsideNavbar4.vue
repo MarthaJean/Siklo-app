@@ -73,6 +73,7 @@ const navbarConfig = computed(() => props.config?.navbar);
 
 // Theme toggle computed properties
 const currentTheme = computed(() => getCurrentTheme());
+const isDarkMode = computed(() => currentTheme.value === "dark");
 const themeIcon = computed(() => {
   return currentTheme.value === "dark"
     ? "mdi-white-balance-sunny"
@@ -142,6 +143,7 @@ async function handleLogout() {
               "
               class="me-3 brand-avatar"
               contain
+              :style="{ filter: isDarkMode ? 'brightness(0) invert(1)' : 'none' }"
             >
               <template #error>
                 <!-- Fallback to avatar with icon if image fails to load -->
@@ -291,6 +293,7 @@ async function handleLogout() {
               "
               class="me-4"
               contain
+              :style="{ filter: isDarkMode ? 'brightness(0) invert(1)' : 'none' }"
             >
               <template #error>
                 <!-- Fallback to avatar with icon if image fails to load -->

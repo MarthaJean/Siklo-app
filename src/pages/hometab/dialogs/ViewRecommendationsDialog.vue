@@ -84,11 +84,21 @@
         </v-chip>
       </v-card-text>
 
-      <v-card-actions class="pa-6 pt-0">
+      <v-card-actions
+        class="pa-6 pt-0 d-flex"
+        :class="{
+          'flex-column gap-3': isMobile,
+          'justify-space-between': !isMobile
+        }"
+      >
         <v-btn
           color="primary"
           variant="elevated"
           prepend-icon="mdi-cart"
+          density="compact"
+          :size="isMobile ? 'medium' : undefined"
+          :block="isMobile"
+          :class="isMobile ? 'text-none' : ''"
           @click="$emit('add-to-cart', recommendation)"
         >
           Add to Cart
@@ -97,6 +107,9 @@
           color="secondary"
           variant="outlined"
           prepend-icon="mdi-chat"
+          density="compact"
+          :size="isMobile ? 'medium' : undefined"
+          :block="isMobile"
           @click="$emit('chat', recommendation)"
         >
           Chat with Supplier
@@ -127,8 +140,8 @@ const emit = defineEmits<{
   chat: [recommendation: RecommendationItem];
 }>();
 
-const { smAndDown } = useDisplay();
-const isMobile = computed(() => smAndDown.value);
+const { mobile } = useDisplay();
+const isMobile = computed(() => mobile.value);
 
 const model = computed({
   get: () => props.modelValue,
