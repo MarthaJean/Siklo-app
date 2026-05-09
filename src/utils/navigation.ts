@@ -14,16 +14,22 @@ export interface NavigationGroup {
 }
 
 export const getHomeRouteForRole = (roleId?: number | null): string => {
-  if (roleId === 2) {
-    return "/seller";
-  }
+  void roleId;
 
-  if (roleId === 3) {
-    return "/buyer";
-  }
-
-  return "/buyer";
+  return "/home";
 };
+
+export const publicRoutes = [
+  "/",
+  "/auth",
+  "/home",
+  "/search",
+  "/cart",
+  "/chat",
+  "/forbidden",
+];
+
+export const authPublicRoutes = ["/home", "/mylistings"];
 
 export const navigationConfig: NavigationGroup[] = [
   {
@@ -33,18 +39,18 @@ export const navigationConfig: NavigationGroup[] = [
       {
         title: "Buyer Home",
         icon: "mdi-home-outline",
-        route: "/buyer",
+        route: "/home",
       },
     ],
   },
   {
-    title: "Seller",
+    title: "Listings",
     icon: "mdi-storefront-outline",
     children: [
       {
-        title: "Seller Home",
+        title: "My Listings",
         icon: "mdi-storefront",
-        route: "/seller",
+        route: "/mylistings",
       },
     ],
   },

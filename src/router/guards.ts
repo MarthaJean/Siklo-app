@@ -56,7 +56,12 @@ export const authGuard = async (
   }
 
   // Check role-based page access for authenticated users on protected routes
-  if (isLoggedIn && to.meta.requiresAuth && !to.path.startsWith("/account/")) {
+  if (
+    isLoggedIn &&
+    to.meta.requiresAuth &&
+    !to.path.startsWith("/account/") &&
+    !to.meta.authPublic
+  ) {
     try {
       const authStore = useAuthUserStore();
       const pagesStore = useUserPagesStore();
@@ -70,20 +75,6 @@ export const authGuard = async (
         if (userRoleId) {
           console.log("Checking page access for role ID:", userRoleId);
           console.log("Requested path:", to.path);
-
-          const roleHomeRoute = getHomeRouteForRole(userRoleId);
-
-          if (to.path === "/buyer" || to.path === "/seller") {
-            if (userRoleId === 1) {
-              return next();
-            }
-
-            if (to.path !== roleHomeRoute) {
-              return next("/forbidden");
-            }
-
-            return next();
-          }
 
           // Fetch pages accessible by this role
           const rolePages = await pagesStore.fetchRolePagesByRoleId(userRoleId);

@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Hero from "@/pages/LandingPage.vue";
 import Auth from "@/pages/Auth.vue";
 import Buyer from "@/pages/BuyerView.vue";
-import Seller from "@/pages/SellerView.vue";
+import MyListings from "@/pages/SellerView.vue";
 import NotFound from "@/pages/NotFound.vue";
 import ForbiddenView from "@/pages/ForbiddenView.vue";
 import AdminUserRolesView from "@/pages/admin/AdminUserRolesView.vue";
@@ -18,7 +18,7 @@ import ChatView from "@/pages/hometab/ChatView.vue";
 /**
  * Route definitions for the application
  */
-const routes = setupLayouts([
+export const routes = setupLayouts([
   {
     path: "/",
     component: Hero,
@@ -34,31 +34,34 @@ const routes = setupLayouts([
     meta: { requiresAuth: true },
   },
   {
-    path: "/buyer",
+    path: "/home",
     component: Buyer,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
-    path: "/seller",
-    component: Seller,
-    meta: { requiresAuth: true },
+    path: "/mylistings",
+    component: MyListings,
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/search",
     component: SearchView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/cart",
     component: CartView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/chat",
     component: ChatView,
+    meta: { requiresAuth: true },
   },
   {
     path: "/account/settings",
     component: SettingsView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/admin/user-roles",
