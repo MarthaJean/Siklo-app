@@ -171,9 +171,7 @@ onMounted(async () => {
           <v-card-text class="text-center">
             <v-divider class="mb-4" />
 
-            <div class="text-body-2 text-medium-emphasis mb-2">
-              Or continue with
-            </div>
+            <div class="text-body-2 mb-2">Or continue with</div>
 
             <!-- Social Login Options (static) -->
             <v-row no-gutters justify="center">
@@ -203,9 +201,7 @@ onMounted(async () => {
               </v-col>
             </v-row>
 
-            <div class="text-caption text-medium-emphasis mt-2">
-              Social login coming soon
-            </div>
+            <div class="text-caption mt-2">Social login coming soon</div>
           </v-card-text>
         </v-card>
 

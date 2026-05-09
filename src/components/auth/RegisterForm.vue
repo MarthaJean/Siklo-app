@@ -57,8 +57,6 @@
           </v-col>
         </v-row>
 
-
-
         <v-row no-gutters>
           <v-col cols="12">
             <v-text-field
@@ -88,9 +86,9 @@
               variant="outlined"
               density="comfortable"
               :rules="[
-                  requiredValidator,
-                  (v) => confirmedValidator(v, registerForm.password)
-                ]"
+                requiredValidator,
+                (v) => confirmedValidator(v, registerForm.password),
+              ]"
               :error-messages="errors.confirmPassword"
               prepend-inner-icon="mdi-lock-check"
               :append-inner-icon="
@@ -121,9 +119,7 @@
 
         <v-row no-gutters>
           <v-col cols="12" class="text-center">
-            <span class="text-body-2 text-medium-emphasis">
-              Already have an account?
-            </span>
+            <span class="text-body-2"> Already have an account? </span>
             <v-btn
               variant="text"
               color="light"
@@ -187,9 +183,9 @@ const registerForm = reactive({
 
 // Computed properties for role options
 const roleOptions = computed(() => {
-  return rolesStore.roles.map(role => ({
-    title: role.title || 'Untitled Role',
-    value: role.id
+  return rolesStore.roles.map((role) => ({
+    title: role.title || "Untitled Role",
+    value: role.id,
   }));
 });
 
@@ -236,7 +232,6 @@ const handleRegister = async () => {
       registerForm.password,
       registerForm.username,
       registerForm.role,
-
     );
 
     if (result.error) {
@@ -255,11 +250,11 @@ const handleRegister = async () => {
       }
     } else {
       toast.success(
-        "Account created successfully! Please check your email to verify your account."
+        "Account created successfully! Please check your email to verify your account.",
       );
       resetForm();
       // Switch back to login form after successful registration
-      emit('switch-to-login');
+      emit("switch-to-login");
     }
   } catch (error: any) {
     toast.error(error.message || "An unexpected error occurred");
