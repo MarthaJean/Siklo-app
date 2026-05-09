@@ -76,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed, nextTick } from "vue";
 import {
   requiredValidator,
   emailValidator,
@@ -149,9 +149,9 @@ const handleLogin = async () => {
       }
     } else {
       toast.success("Login successful!");
-      resetForm();
       const roleId = result.user?.user_metadata?.role;
-      router.push(getHomeRouteForRole(roleId));
+      await router.push(getHomeRouteForRole(roleId));
+      await resetForm();
     }
   } catch (error: any) {
     toast.error(error.message || "An unexpected error occurred");
@@ -161,10 +161,11 @@ const handleLogin = async () => {
 };
 
 // Reset form
-const resetForm = () => {
-  loginForm.email = "";
-  loginForm.password = "";
+const resetForm = async () => {
+  formRef.value?.reset();
+  formValid.value = false;
   clearErrors();
+  await nextTick();
   formRef.value?.resetValidation();
 };
 

@@ -21,6 +21,7 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/account/components/SettingsWidget': RouteRecordInfo<'/account/components/SettingsWidget', '/account/components/SettingsWidget', Record<never, never>, Record<never, never>>,
     '/account/SettingsView': RouteRecordInfo<'/account/SettingsView', '/account/SettingsView', Record<never, never>, Record<never, never>>,
+    '/AddListingsView': RouteRecordInfo<'/AddListingsView', '/AddListingsView', Record<never, never>, Record<never, never>>,
     '/admin/AdminUserRolesView': RouteRecordInfo<'/admin/AdminUserRolesView', '/admin/AdminUserRolesView', Record<never, never>, Record<never, never>>,
     '/admin/AnnouncementsView': RouteRecordInfo<'/admin/AnnouncementsView', '/admin/AnnouncementsView', Record<never, never>, Record<never, never>>,
     '/admin/components/dialogs/DeleteUserDialog': RouteRecordInfo<'/admin/components/dialogs/DeleteUserDialog', '/admin/components/dialogs/DeleteUserDialog', Record<never, never>, Record<never, never>>,
@@ -40,8 +41,6 @@ declare module 'vue-router/auto-routes' {
     '/hometab/ChatView': RouteRecordInfo<'/hometab/ChatView', '/hometab/ChatView', Record<never, never>, Record<never, never>>,
     '/hometab/components/ListingsWidget': RouteRecordInfo<'/hometab/components/ListingsWidget', '/hometab/components/ListingsWidget', Record<never, never>, Record<never, never>>,
     '/hometab/components/SearchWidget': RouteRecordInfo<'/hometab/components/SearchWidget', '/hometab/components/SearchWidget', Record<never, never>, Record<never, never>>,
-    '/hometab/components/SellerListings': RouteRecordInfo<'/hometab/components/SellerListings', '/hometab/components/SellerListings', Record<never, never>, Record<never, never>>,
-    '/hometab/components/SellerStatistics': RouteRecordInfo<'/hometab/components/SellerStatistics', '/hometab/components/SellerStatistics', Record<never, never>, Record<never, never>>,
     '/hometab/dialogs/ViewRecommendationsDialog': RouteRecordInfo<'/hometab/dialogs/ViewRecommendationsDialog', '/hometab/dialogs/ViewRecommendationsDialog', Record<never, never>, Record<never, never>>,
     '/hometab/HomeAnnouncements': RouteRecordInfo<'/hometab/HomeAnnouncements', '/hometab/HomeAnnouncements', Record<never, never>, Record<never, never>>,
     '/hometab/HomeLogs': RouteRecordInfo<'/hometab/HomeLogs', '/hometab/HomeLogs', Record<never, never>, Record<never, never>>,
@@ -50,6 +49,9 @@ declare module 'vue-router/auto-routes' {
     '/LandingPage': RouteRecordInfo<'/LandingPage', '/LandingPage', Record<never, never>, Record<never, never>>,
     '/NotFound': RouteRecordInfo<'/NotFound', '/NotFound', Record<never, never>, Record<never, never>>,
     '/otherTab/Page1View': RouteRecordInfo<'/otherTab/Page1View', '/otherTab/Page1View', Record<never, never>, Record<never, never>>,
+    '/seller/SellerListings': RouteRecordInfo<'/seller/SellerListings', '/seller/SellerListings', Record<never, never>, Record<never, never>>,
+    '/seller/SellerListWidget': RouteRecordInfo<'/seller/SellerListWidget', '/seller/SellerListWidget', Record<never, never>, Record<never, never>>,
+    '/seller/SellerStatistics': RouteRecordInfo<'/seller/SellerStatistics', '/seller/SellerStatistics', Record<never, never>, Record<never, never>>,
     '/SellerView': RouteRecordInfo<'/SellerView', '/SellerView', Record<never, never>, Record<never, never>>,
   }
 }

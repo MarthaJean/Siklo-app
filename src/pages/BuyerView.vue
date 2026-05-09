@@ -34,24 +34,22 @@ const handleLogout = async () => {
     <template #content>
       <v-container fluid class="pa-0">
         <!-- Announcements Carousel Section -->
-        <section class="announcements-section mb-8">
+        <section class="announcements-section">
           <v-container>
             <HomeAnnouncements />
           </v-container>
         </section>
 
         <!-- Divider -->
-        <v-divider class="mx-4 mb-8" />
+        <v-divider class="mx-4" />
 
         <!-- Listings Preview Section -->
-        <section class="listings-section mb-8">
-          <v-container>
-            <ListingsView />
-          </v-container>
+        <section>
+          <ListingsView />
         </section>
 
         <!-- Divider -->
-        <v-divider class="mx-4 mb-8" />
+        <v-divider class="mx-4" />
 
         <!-- Logs Section -->
         <section class="logs-section">

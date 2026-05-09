@@ -3,6 +3,7 @@ export interface NavigationItem {
   icon: string;
   route: string;
   selected?: boolean;
+  authPublic?: boolean;
   permission?: string; // Optional permission key for role-based access
 }
 
@@ -14,16 +15,27 @@ export interface NavigationGroup {
 }
 
 export const getHomeRouteForRole = (roleId?: number | null): string => {
-  if (roleId === 2) {
-    return "/seller";
-  }
+  void roleId;
 
-  if (roleId === 3) {
-    return "/buyer";
-  }
-
-  return "/buyer";
+  return "/home";
 };
+
+export const publicRoutes = [
+  "/",
+  "/auth",
+  "/home",
+  "/search",
+  "/cart",
+  "/chat",
+  "/forbidden",
+];
+
+export const authPublicRoutes = [
+  "/home",
+  "/mylistings",
+  "/add-listings",
+  "/account/settings",
+];
 
 export const navigationConfig: NavigationGroup[] = [
   {
@@ -33,18 +45,20 @@ export const navigationConfig: NavigationGroup[] = [
       {
         title: "Buyer Home",
         icon: "mdi-home-outline",
-        route: "/buyer",
+        route: "/home",
+        authPublic: true,
       },
     ],
   },
   {
-    title: "Seller",
+    title: "Listings",
     icon: "mdi-storefront-outline",
     children: [
       {
-        title: "Seller Home",
+        title: "My Listings",
         icon: "mdi-storefront",
-        route: "/seller",
+        route: "/mylistings",
+        authPublic: true,
       },
     ],
   },
@@ -56,6 +70,7 @@ export const navigationConfig: NavigationGroup[] = [
         title: "Settings",
         icon: "mdi-cog-outline",
         route: "/account/settings",
+        authPublic: true,
       },
     ],
   },

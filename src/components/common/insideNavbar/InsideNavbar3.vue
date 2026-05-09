@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 import type { UIConfig, LogoConfig } from "@/controller/landingController";
-import { computed, ref, onMounted, onUnmounted, watch } from "vue";
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import { useTheme } from "@/composables/useTheme";
 import { useAuthUserStore } from "@/stores/authUser";
+import { useUserPermissions } from "@/composables/useUserPermissions";
 import SlugName from "./SlugName.vue";
-import {
-  navigationConfig,
-  type NavigationGroup,
-  type NavigationItem,
-} from "@/utils/navigation";
+import PerfectScrollbar from "perfect-scrollbar";
+import "perfect-scrollbar/css/perfect-scrollbar.css";
+import { type NavigationGroup, type NavigationItem } from "@/utils/navigation";
 
 interface Props {
   config?: UIConfig | null;
@@ -19,6 +18,8 @@ interface Props {
 const props = defineProps<Props>();
 const router = useRouter();
 const authStore = useAuthUserStore();
+const { getFilteredNavigationGroups, isLoading: navLoading } =
+  useUserPermissions();
 
 // Vuetify display composable for responsiveness
 const { mobile, mdAndUp, lgAndUp, xs, sm, md } = useDisplay();
@@ -36,6 +37,7 @@ const {
 } = useTheme();
 
 const navbarConfig = computed(() => props.config?.navbar);
+const navigationGroups = computed(() => getFilteredNavigationGroups());
 
 // Positioning logic that accounts for sidebar
 const navbarPositioning = computed(() => {
@@ -90,17 +92,18 @@ const themeTooltip = computed(() => {
   return `Switch to ${currentTheme.value === "dark" ? "light" : "dark"} theme`;
 });
 
-// Scroll handler for floating effect and auto-close drawer
+const userEmail = computed(() => authStore.userData?.email || "Not available");
+const userRole = computed(
+  () => authStore.userData?.user_metadata?.role ?? "Unknown",
+);
+
+const drawerScrollRef = ref<HTMLElement | null>(null);
+let drawerScrollbar: PerfectScrollbar | null = null;
+
+// Scroll handler for floating effect
 const handleScroll = () => {
   const currentScrollY = window.scrollY;
   isScrolled.value = currentScrollY > 20;
-
-  // Auto-close drawer when scrolling down on mobile and tablets
-  if (!lgAndUp.value && drawer.value) {
-    if (currentScrollY > lastScrollY.value && currentScrollY > 100) {
-      drawer.value = false;
-    }
-  }
 
   lastScrollY.value = currentScrollY;
 };
@@ -128,11 +131,44 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener("scroll", handleScroll);
+  drawerScrollbar?.destroy();
+  drawerScrollbar = null;
 });
 
 function toggleTheme() {
   handleToggleTheme();
 }
+
+function toggleDrawer() {
+  drawer.value = !drawer.value;
+}
+
+function closeDrawer() {
+  drawer.value = false;
+}
+
+const initDrawerScrollbar = async () => {
+  if (!drawerScrollRef.value) {
+    return;
+  }
+
+  await nextTick();
+
+  if (drawerScrollbar) {
+    drawerScrollbar.update();
+    return;
+  }
+
+  drawerScrollbar = new PerfectScrollbar(drawerScrollRef.value, {
+    suppressScrollX: true,
+  });
+};
+
+watch(drawer, (isOpen) => {
+  if (isOpen) {
+    void initDrawerScrollbar();
+  }
+});
 
 async function handleLogout() {
   try {
@@ -258,7 +294,7 @@ async function handleLogout() {
           icon="mdi-menu"
           variant="text"
           :size="xs ? 'default' : 'large'"
-          @click="drawer = !drawer"
+          @click="toggleDrawer"
         />
       </template>
     </v-app-bar>
@@ -273,7 +309,7 @@ async function handleLogout() {
       :scrim="true"
       :elevation="24"
       absolute
-      class="pa-0"
+      class="pa-0 d-flex flex-column"
       style="
         position: fixed !important;
         z-index: 9999 !important;
@@ -340,44 +376,51 @@ async function handleLogout() {
             size="small"
             class="position-absolute"
             style="top: 16px; right: 16px"
-            @click="drawer = false"
+            @click="closeDrawer"
           />
         </v-card>
         <v-divider />
       </template>
 
       <!-- Navigation List -->
-      <v-list nav class="py-0">
-        <template v-for="group in navigationConfig" :key="group.title">
-          <!-- Navigation Group -->
-          <v-list-group :value="group.title">
-            <template #activator="{ props: activatorProps }">
+      <div ref="drawerScrollRef" class="flex-grow-1 overflow-hidden">
+        <v-list nav class="py-0">
+          <div v-if="navLoading" class="text-center py-4">
+            <v-progress-circular indeterminate color="primary" size="24" />
+          </div>
+          <template v-else v-for="group in navigationGroups" :key="group.title">
+            <!-- Navigation Group -->
+            <v-list-group :value="group.title">
+              <template #activator="{ props: activatorProps }">
+                <v-list-item
+                  v-bind="activatorProps"
+                  :prepend-icon="group.icon"
+                  :title="group.title"
+                  rounded="xl"
+                  class="ma-2"
+                />
+              </template>
+
+              <!-- Navigation Items -->
               <v-list-item
-                v-bind="activatorProps"
-                :prepend-icon="group.icon"
-                :title="group.title"
+                v-for="item in group.children"
+                :key="item.route"
+                :prepend-icon="item.icon"
+                :title="item.title"
+                :to="item.route"
                 rounded="xl"
-                class="ma-2"
+                class="ma-2 ms-4"
+                @click="closeDrawer"
               />
-            </template>
+            </v-list-group>
+          </template>
+        </v-list>
+      </div>
 
-            <!-- Navigation Items -->
-            <v-list-item
-              v-for="item in group.children"
-              :key="item.route"
-              :prepend-icon="item.icon"
-              :title="item.title"
-              :to="item.route"
-              rounded="xl"
-              class="ma-2 ms-4"
-              @click="drawer = false"
-            />
-          </v-list-group>
-        </template>
+      <v-divider class="my-2 mx-4" />
 
-        <v-divider class="my-2 mx-4" />
-
-        <!-- Theme Toggle -->
+      <!-- Theme Toggle -->
+      <v-list nav class="py-0">
         <v-list-group value="Theme">
           <template #activator="{ props: activatorProps }">
             <v-list-item
@@ -416,7 +459,7 @@ async function handleLogout() {
           to="/account/home"
           rounded="xl"
           class="ma-2"
-          @click="drawer = false"
+          @click="closeDrawer"
         />
         <v-list-item
           prepend-icon="mdi-cog-outline"
@@ -424,16 +467,37 @@ async function handleLogout() {
           to="/account/settings"
           rounded="xl"
           class="ma-2"
-          @click="drawer = false"
-        />
-        <v-list-item
-          prepend-icon="mdi-logout"
-          title="Logout"
-          rounded="xl"
-          class="ma-2"
-          @click="handleLogout"
+          @click="closeDrawer"
         />
       </v-list>
+
+      <v-divider class="my-2 mx-4" />
+
+      <v-card flat class="px-4 py-3">
+        <div class="d-flex align-center">
+          <SlugName class="me-2" />
+          <div class="d-flex flex-column">
+            <span class="text-body-2 font-weight-medium">User details</span>
+            <span class="text-caption text-medium-emphasis">
+              {{ userEmail }}
+            </span>
+            <span class="text-caption text-medium-emphasis">
+              Role: {{ userRole }}
+            </span>
+          </div>
+        </div>
+        <v-btn
+          class="mt-3"
+          color="error"
+          variant="tonal"
+          size="small"
+          prepend-icon="mdi-logout"
+          block
+          @click="handleLogout"
+        >
+          Logout
+        </v-btn>
+      </v-card>
     </v-navigation-drawer>
   </div>
 </template>

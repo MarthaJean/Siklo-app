@@ -2,14 +2,20 @@
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthUserStore } from "@/stores/authUser";
+import { useRouter } from "vue-router";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
-import SellerStatistics from "@/pages/hometab/components/SellerStatistics.vue";
-import SellerListings from "@/pages/hometab/components/SellerListings.vue";
+import SellerListWidget from "@/pages/seller/SellerListWidget.vue";
+import SellerStatistics from "@/pages/seller/SellerStatistics.vue";
 
 const authStore = useAuthUserStore();
+const router = useRouter();
 const { userName } = storeToRefs(authStore);
 
 const displayName = computed(() => userName.value || "Seller");
+
+const goToAddListings = () => {
+  router.push("/add-listings");
+};
 </script>
 
 <template>
@@ -25,15 +31,16 @@ const displayName = computed(() => userName.value || "Seller");
               Manage your listings, track orders, and review sales performance.
             </div>
           </v-col>
+          <v-col cols="12" md="4" class="text-md-right">
+            <v-btn color="primary" variant="elevated" @click="goToAddListings">
+              Add Listings
+            </v-btn>
+          </v-col>
         </v-row>
 
         <SellerStatistics />
 
-        <v-row dense class="mt-6">
-          <v-col cols="12">
-            <SellerListings />
-          </v-col>
-        </v-row>
+        <SellerListWidget />
       </v-container>
     </template>
   </InnerLayoutWrapper>

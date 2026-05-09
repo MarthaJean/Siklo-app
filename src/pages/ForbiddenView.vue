@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useTheme } from "vuetify";
+import { useDisplay, useTheme } from "vuetify";
 import { createDynamicThemeConfigFromExternal } from "@/themes/index";
+import { useAuthUserStore } from "@/stores/authUser";
 
 // Composables
 const router = useRouter();
 const theme = useTheme();
+const { mobile } = useDisplay();
+const authStore = useAuthUserStore();
 
 // Reactive state
 const themeLoading = ref(true);
@@ -25,6 +28,14 @@ const navigateHome = () => {
   router.push("/");
 };
 
+const handleLogout = async () => {
+  try {
+    await authStore.signOut();
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};
+
 // Load dynamic theme configuration
 const loadDynamicTheme = async () => {
   try {
@@ -37,10 +48,11 @@ const loadDynamicTheme = async () => {
     theme.themes.value.light = themeConfig.themes.light;
     theme.themes.value.dark = themeConfig.themes.dark;
 
-    console.log('Dynamic theme loaded successfully');
+    console.log("Dynamic theme loaded successfully");
   } catch (error) {
-    console.error('Failed to load dynamic theme:', error);
-    themeError.value = error instanceof Error ? error.message : 'Failed to load theme';
+    console.error("Failed to load dynamic theme:", error);
+    themeError.value =
+      error instanceof Error ? error.message : "Failed to load theme";
   } finally {
     themeLoading.value = false;
   }
@@ -56,11 +68,7 @@ onMounted(async () => {
 <template>
   <!-- Theme Loading State -->
   <v-overlay v-if="themeLoading" class="d-flex align-center justify-center">
-    <v-progress-circular
-      indeterminate
-      size="64"
-      color="primary"
-    />
+    <v-progress-circular indeterminate size="64" color="primary" />
     <div class="text-h6 ml-4">Loading theme...</div>
   </v-overlay>
 
@@ -83,18 +91,12 @@ onMounted(async () => {
         <v-container class="mx-auto text-center" elevation="8" rounded="lg">
           <v-card-text class="py-8">
             <!-- 403 Icon -->
-            <v-icon
-              size="120"
-              color="error"
-              class="mb-4"
-            >
+            <v-icon size="120" color="error" class="mb-4">
               mdi-lock-outline
             </v-icon>
 
             <!-- Error Code -->
-            <div class="text-h1 font-weight-bold text-error mb-2">
-              403
-            </div>
+            <div class="text-h1 font-weight-bold text-error mb-2">403</div>
 
             <!-- Error Title -->
             <div class="text-h4 font-weight-light mb-4 text-error">
@@ -103,8 +105,9 @@ onMounted(async () => {
 
             <!-- Error Description -->
             <div class="text-body-1 text-medium-emphasis mb-6">
-              You don't have permission to access this resource. This might be because
-              your user role doesn't include access to this page, or your session has expired.
+              You don't have permission to access this resource. This might be
+              because your user role doesn't include access to this page, or
+              your session has expired.
             </div>
 
             <!-- Helpful Suggestions -->
@@ -124,27 +127,46 @@ onMounted(async () => {
             </v-alert>
 
             <!-- Action Buttons -->
-            <v-row no-gutters justify="center" class="mb-4">
-              <v-col cols="auto" class="mx-2">
+            <v-row
+              no-gutters
+              justify="center"
+              class="mb-4"
+              :class="{ 'flex-column': mobile }"
+            >
+              <v-col :cols="mobile ? 12 : 'auto'" class="mx-2 mb-2">
                 <v-btn
                   color="primary"
                   variant="elevated"
                   size="large"
                   prepend-icon="mdi-view-dashboard"
+                  :block="mobile"
                   @click="navigateToDashboard"
                 >
                   Dashboard
                 </v-btn>
               </v-col>
-              <v-col cols="auto" class="mx-2">
+              <v-col :cols="mobile ? 12 : 'auto'" class="mx-2 mb-2">
                 <v-btn
                   color="secondary"
                   variant="outlined"
                   size="large"
                   prepend-icon="mdi-arrow-left"
+                  :block="mobile"
                   @click="goBack"
                 >
                   Go Back
+                </v-btn>
+              </v-col>
+              <v-col :cols="mobile ? 12 : 'auto'" class="mx-2">
+                <v-btn
+                  color="error"
+                  variant="tonal"
+                  size="large"
+                  prepend-icon="mdi-logout"
+                  :block="mobile"
+                  @click="handleLogout"
+                >
+                  Logout
                 </v-btn>
               </v-col>
             </v-row>
@@ -172,7 +194,7 @@ onMounted(async () => {
             :color="`error`"
             :style="{
               opacity: Math.random() * 0.1 + 0.02,
-              transform: `rotate(${Math.random() * 360}deg)`
+              transform: `rotate(${Math.random() * 360}deg)`,
             }"
           >
             mdi-lock
