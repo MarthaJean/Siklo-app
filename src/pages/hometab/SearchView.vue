@@ -15,14 +15,9 @@
             </div>
             <v-card class="search-card mb-6" variant="outlined">
               <v-card-text class="pa-4">
-                <v-text-field
+                <SearchBar
                   v-model="query"
-                  label="Search biowaste listings"
                   placeholder="Try: coffee grounds, food waste, rice husks"
-                  prepend-inner-icon="mdi-magnify"
-                  variant="outlined"
-                  clearable
-                  density="comfortable"
                 />
               </v-card-text>
             </v-card>
@@ -160,6 +155,7 @@ import type { RecommendationItem } from "@/pages/hometab/data/recommendationsDat
 import ViewRecommendationsDialog from "@/pages/hometab/dialogs/ViewRecommendationsDialog.vue";
 import { useListingsDataStore } from "@/stores/listingsData";
 import { useCartDataStore } from "@/stores/cartData";
+import SearchBar from "@/components/ui/SearchBar.vue";
 
 const route = useRoute();
 const router = useRouter();

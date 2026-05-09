@@ -8,19 +8,17 @@
         max-width="600"
       >
         <template v-slot:activator="{ props }">
-          <v-text-field
-            v-model="query"
+          <div
             v-bind="props"
-            label="Search biowaste listings"
-            placeholder="Try: coffee grounds, food waste, rice husks"
-            prepend-inner-icon="mdi-magnify"
-            variant="outlined"
-            clearable
-            density="comfortable"
-            @focus="handleSearchFocus"
+            class="search-activator"
             @click="handleSearchFocus"
+            @focusin="handleSearchFocus"
           >
-          </v-text-field>
+            <SearchBar
+              v-model="query"
+              placeholder="Try: coffee grounds, food waste, rice husks"
+            />
+          </div>
         </template>
 
         <v-card class="recommendations-card" variant="outlined">
@@ -68,6 +66,7 @@
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { recommendations } from "@/pages/hometab/data/recommendationsData";
+import SearchBar from "@/components/ui/SearchBar.vue";
 
 const query = ref("");
 const menuOpen = ref(false);
@@ -106,6 +105,11 @@ const goToSearch = () => {
 <style scoped>
 .search-card {
   border-radius: 12px !important;
+}
+
+.search-activator {
+  display: flex;
+  width: 100%;
 }
 
 .recommendations-card {

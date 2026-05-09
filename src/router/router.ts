@@ -32,7 +32,7 @@ export const routes = setupLayouts([
   {
     path: "/account/home",
     component: Buyer,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true,authPublic: true },
   },
   {
     path: "/home",
@@ -47,17 +47,17 @@ export const routes = setupLayouts([
   {
     path: "/search",
     component: SearchView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/cart",
     component: CartView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/chat",
     component: ChatView,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/add-listings",
