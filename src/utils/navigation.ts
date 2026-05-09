@@ -3,6 +3,7 @@ export interface NavigationItem {
   icon: string;
   route: string;
   selected?: boolean;
+  authPublic?: boolean;
   permission?: string; // Optional permission key for role-based access
 }
 
@@ -29,7 +30,12 @@ export const publicRoutes = [
   "/forbidden",
 ];
 
-export const authPublicRoutes = ["/home", "/mylistings"];
+export const authPublicRoutes = [
+  "/home",
+  "/mylistings",
+  "/add-listings",
+  "/account/settings",
+];
 
 export const navigationConfig: NavigationGroup[] = [
   {
@@ -40,6 +46,7 @@ export const navigationConfig: NavigationGroup[] = [
         title: "Buyer Home",
         icon: "mdi-home-outline",
         route: "/home",
+        authPublic: true,
       },
     ],
   },
@@ -51,6 +58,7 @@ export const navigationConfig: NavigationGroup[] = [
         title: "My Listings",
         icon: "mdi-storefront",
         route: "/mylistings",
+        authPublic: true,
       },
     ],
   },
@@ -62,6 +70,7 @@ export const navigationConfig: NavigationGroup[] = [
         title: "Settings",
         icon: "mdi-cog-outline",
         route: "/account/settings",
+        authPublic: true,
       },
     ],
   },

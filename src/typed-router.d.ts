@@ -21,6 +21,7 @@ declare module 'vue-router/auto-routes' {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
     '/account/components/SettingsWidget': RouteRecordInfo<'/account/components/SettingsWidget', '/account/components/SettingsWidget', Record<never, never>, Record<never, never>>,
     '/account/SettingsView': RouteRecordInfo<'/account/SettingsView', '/account/SettingsView', Record<never, never>, Record<never, never>>,
+    '/AddListingsView': RouteRecordInfo<'/AddListingsView', '/AddListingsView', Record<never, never>, Record<never, never>>,
     '/admin/AdminUserRolesView': RouteRecordInfo<'/admin/AdminUserRolesView', '/admin/AdminUserRolesView', Record<never, never>, Record<never, never>>,
     '/admin/AnnouncementsView': RouteRecordInfo<'/admin/AnnouncementsView', '/admin/AnnouncementsView', Record<never, never>, Record<never, never>>,
     '/admin/components/dialogs/DeleteUserDialog': RouteRecordInfo<'/admin/components/dialogs/DeleteUserDialog', '/admin/components/dialogs/DeleteUserDialog', Record<never, never>, Record<never, never>>,

@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
-import type { RouteRecordRaw } from "vue-router";
 import type { Role, CreateRoleData } from "@/stores/roles";
+import type { NavigationItem } from "@/utils/navigation";
 import {
   getNavigationWithSelection,
   getAllPermissions,
-  publicRoutes,
+  authPublicRoutes,
 } from "@/utils/navigation";
-import { routes } from "@/router/router";
 import { useRoleEditFetchDialog } from "../composables/roleEditFetchDialog";
 
 interface Props {
@@ -57,6 +56,17 @@ const myAccountGroupExpanded = ref(true);
 // Selected permissions for the role - initialized from current role permissions when editing
 const selectedPermissions = ref<string[]>([]);
 
+const isAuthPublicRoute = (route?: string) =>
+  !!route && authPublicRoutes.includes(route);
+
+const ensureAuthPublicPermissions = () => {
+  authPublicRoutes.forEach((route) => {
+    if (!selectedPermissions.value.includes(route)) {
+      selectedPermissions.value.push(route);
+    }
+  });
+};
+
 // Watch for changes in selectedRole to fetch permissions when editing
 watch(
   () => props.selectedRole,
@@ -66,9 +76,11 @@ watch(
       await fetchRolePermissions(newRole.id);
       // Set selected permissions to current role permissions
       selectedPermissions.value = [...currentRolePermissions.value];
+      ensureAuthPublicPermissions();
     } else {
       // Clear permissions when creating new role or closing dialog
       selectedPermissions.value = [];
+      ensureAuthPublicPermissions();
       clearPermissions();
     }
   },
@@ -81,41 +93,19 @@ watch(
   (isOpen) => {
     if (!isOpen) {
       selectedPermissions.value = [];
+      ensureAuthPublicPermissions();
       clearPermissions();
     }
   },
 );
-
-// Get navigation groups with selection state
-const collectAuthPublicRoutes = (records: RouteRecordRaw[]) => {
-  const collected: string[] = [];
-
-  records.forEach((record) => {
-    if (record.meta?.authPublic && record.path) {
-      collected.push(record.path);
-    }
-
-    if (record.children?.length) {
-      collected.push(...collectAuthPublicRoutes(record.children));
-    }
-  });
-
-  return collected;
-};
-
-const authPublicRouteSet = new Set(
-  collectAuthPublicRoutes(routes as RouteRecordRaw[]),
-);
-
-const isPublicRoute = (route?: string) =>
-  !!route && (publicRoutes.includes(route) || authPublicRouteSet.has(route));
 
 const navigationGroups = computed(() =>
   getNavigationWithSelection(selectedPermissions.value).map((group) => ({
     ...group,
     children: group.children.map((child) => ({
       ...child,
-      selected: child.selected || isPublicRoute(child.route),
+      selected:
+        child.selected || child.authPublic || isAuthPublicRoute(child.route),
     })),
   })),
 );
@@ -142,6 +132,16 @@ const togglePermission = (permission: string, selected: boolean) => {
   }
 };
 
+const handlePermissionToggle = (child: NavigationItem, selected: boolean) => {
+  const key = child.permission || child.route;
+
+  if (!key || isAuthPublicRoute(child.route)) {
+    return;
+  }
+
+  togglePermission(key, selected);
+};
+
 const closeDialog = () => {
   emit("close-dialog");
 };
@@ -149,6 +149,7 @@ const closeDialog = () => {
 const handleSubmit = async () => {
   // For editing, let the parent handle both role update and permission saving
   // For creating, just emit the permissions to be saved after role creation
+  ensureAuthPublicPermissions();
   emit("handle-submit", selectedPermissions.value);
 };
 
@@ -241,19 +242,13 @@ const handleDelete = () => {
                         <v-checkbox
                           :model-value="child.selected"
                           @update:model-value="
-                            (value) =>
-                              togglePermission(
-                                child.permission || child.route,
-                                !!value,
-                              )
+                            (value) => handlePermissionToggle(child, !!value)
                           "
                           hide-details
                           density="compact"
                           class="mr-2"
-                          :disabled="
-                            isPublicRoute(child.route) ||
-                            !(child.permission || child.route)
-                          "
+                          :disabled="isAuthPublicRoute(child.route)"
+                          :readonly="isAuthPublicRoute(child.route)"
                         />
                         <v-icon :icon="child.icon" size="20" class="mr-2" />
                       </template>

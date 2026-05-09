@@ -14,6 +14,7 @@ import SettingsView from "@/pages/account/SettingsView.vue";
 import SearchView from "@/pages/hometab/SearchView.vue";
 import CartView from "@/pages/hometab/CartView.vue";
 import ChatView from "@/pages/hometab/ChatView.vue";
+import AddListingsView from "@/pages/AddListingsView.vue";
 
 /**
  * Route definitions for the application
@@ -57,6 +58,11 @@ export const routes = setupLayouts([
     path: "/chat",
     component: ChatView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/add-listings",
+    component: AddListingsView,
+    meta: { requiresAuth: true, authPublic: true },
   },
   {
     path: "/account/settings",
