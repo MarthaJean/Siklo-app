@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useTheme } from "@/composables/useTheme";
 const props = withDefaults(
   defineProps<{
     modelValue: string;
@@ -13,6 +15,9 @@ const emit = defineEmits<{
   (event: "update:modelValue", value: string): void;
 }>();
 
+const { getCurrentTheme } = useTheme();
+const isDark = computed(() => getCurrentTheme() === "dark");
+
 const onInput = (event: Event) => {
   const target = event.target as HTMLInputElement | null;
   emit("update:modelValue", target?.value ?? "");
@@ -24,7 +29,7 @@ const onReset = () => {
 </script>
 
 <template>
-  <div class="search">
+  <div class="search" :class="{ 'search--dark': isDark }">
     <input
       type="text"
       class="search__input"
@@ -32,14 +37,8 @@ const onReset = () => {
       :value="props.modelValue"
       @input="onInput"
     />
-    <button class="search__button" type="button">
-      <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
-        <g>
-          <path
-            d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"
-          ></path>
-        </g>
-      </svg>
+    <button class="search__button" type="button" aria-label="Search">
+      <v-icon class="search__icon" icon="mdi-magnify" size="20" />
     </button>
   </div>
 </template>
@@ -64,7 +63,7 @@ const onReset = () => {
   border-radius: 30px;
   width: 100%;
   transition: all ease-in-out 0.5s;
-  margin-right: -2rem;
+  margin-right: -3rem;
 }
 
 .search__input:hover,
@@ -84,12 +83,15 @@ const onReset = () => {
 }
 
 .search__input:focus + .search__button {
-  background-color: rgba(var(--v-theme-surface), 1);
+  background-color: transparent;
 }
 
 .search__button {
   border: none;
-  background-color: rgba(var(--v-theme-surface), 0.9);
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  appearance: none;
   margin-top: 0.1em;
 }
 
@@ -98,9 +100,8 @@ const onReset = () => {
 }
 
 .search__icon {
-  height: 1.3em;
-  width: 1em;
   margin-right: 0.8em;
-  fill: rgba(var(--v-theme-on-surface), 0.45);
+  color: rgba(var(--v-theme-on-surface), 0.45);
+  margin-left: -0.6rem;
 }
 </style>
