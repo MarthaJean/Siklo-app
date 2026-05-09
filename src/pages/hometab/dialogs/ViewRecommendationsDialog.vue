@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="model" max-width="760" scrollable>
     <v-card v-if="recommendation" class="recommendation-dialog">
-      <v-card-title class="pa-4">
+      <v-card-title>
         <div class="d-flex align-center w-100">
           <div
             v-if="!isMobile"
@@ -9,7 +9,13 @@
           >
             {{ recommendation.title }}
           </div>
-          <div v-else class="flex-grow-1"></div>
+          <div v-else class="flex-grow-1">
+            <div v-if="isMobile" class="pa-1">
+              <div class="text-body-1 font-weight-bold">
+                {{ recommendation.title }}
+              </div>
+            </div>
+          </div>
           <v-btn
             icon="mdi-close"
             variant="text"
@@ -18,12 +24,6 @@
           />
         </div>
       </v-card-title>
-
-      <div v-if="isMobile" class="pa-4 pb-0">
-        <div class="text-body-1 font-weight-bold title-wrap">
-          {{ recommendation.title }}
-        </div>
-      </div>
 
       <div class="detail-image-section">
         <v-img :src="recommendation.image_url" max-height="320" cover>
@@ -88,7 +88,7 @@
         class="pa-6 pt-0 d-flex"
         :class="{
           'flex-column gap-3': isMobile,
-          'justify-space-between': !isMobile
+          'justify-space-between': !isMobile,
         }"
       >
         <v-btn
@@ -96,7 +96,7 @@
           variant="elevated"
           prepend-icon="mdi-cart"
           density="compact"
-          :size="isMobile ? 'medium' : undefined"
+          :size="isMobile ? 'large' : undefined"
           :block="isMobile"
           :class="isMobile ? 'text-none' : ''"
           @click="$emit('add-to-cart', recommendation)"
@@ -108,7 +108,7 @@
           variant="outlined"
           prepend-icon="mdi-chat"
           density="compact"
-          :size="isMobile ? 'medium' : undefined"
+          :size="isMobile ? 'large' : undefined"
           :block="isMobile"
           @click="$emit('chat', recommendation)"
         >
