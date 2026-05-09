@@ -5,14 +5,11 @@ import { useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
 import { useTheme } from "@/composables/useTheme";
 import { useAuthUserStore } from "@/stores/authUser";
+import { useUserPermissions } from "@/composables/useUserPermissions";
 import SlugName from "./SlugName.vue";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-import {
-  navigationConfig,
-  type NavigationGroup,
-  type NavigationItem,
-} from "@/utils/navigation";
+import { type NavigationGroup, type NavigationItem } from "@/utils/navigation";
 
 interface Props {
   config?: UIConfig | null;
@@ -21,6 +18,8 @@ interface Props {
 const props = defineProps<Props>();
 const router = useRouter();
 const authStore = useAuthUserStore();
+const { getFilteredNavigationGroups, isLoading: navLoading } =
+  useUserPermissions();
 
 // Vuetify display composable for responsiveness
 const { mobile, mdAndUp, lgAndUp, xs, sm, md } = useDisplay();
@@ -38,6 +37,7 @@ const {
 } = useTheme();
 
 const navbarConfig = computed(() => props.config?.navbar);
+const navigationGroups = computed(() => getFilteredNavigationGroups());
 
 // Positioning logic that accounts for sidebar
 const navbarPositioning = computed(() => {
@@ -385,7 +385,10 @@ async function handleLogout() {
       <!-- Navigation List -->
       <div ref="drawerScrollRef" class="flex-grow-1 overflow-hidden">
         <v-list nav class="py-0">
-          <template v-for="group in navigationConfig" :key="group.title">
+          <div v-if="navLoading" class="text-center py-4">
+            <v-progress-circular indeterminate color="primary" size="24" />
+          </div>
+          <template v-else v-for="group in navigationGroups" :key="group.title">
             <!-- Navigation Group -->
             <v-list-group :value="group.title">
               <template #activator="{ props: activatorProps }">

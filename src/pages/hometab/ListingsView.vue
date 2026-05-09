@@ -1,9 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
-    <section class="listings-section mb-8">
-      <v-container>
-        <ListingsWidget />
-      </v-container>
+    <section class="listings-section">
+      <ListingsWidget />
     </section>
   </v-container>
 </template>

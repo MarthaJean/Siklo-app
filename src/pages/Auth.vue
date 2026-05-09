@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -14,7 +13,12 @@ const router = useRouter();
 const route = useRoute();
 const authStore = useAuthUserStore();
 const theme = useTheme();
-const { data: authPageData, loading: authPageLoading, error: authPageError, fetchAuthPageData } = useAuthPageController();
+const {
+  data: authPageData,
+  loading: authPageLoading,
+  error: authPageError,
+  fetchAuthPageData,
+} = useAuthPageController();
 
 // Reactive state
 const isLoginMode = ref(true);
@@ -23,7 +27,7 @@ const themeError = ref<string | null>(null);
 
 // Computed properties for layout
 const isQuoteOnLeft = computed(() => {
-  return authPageData.value?.layout?.quotePosition === 'left';
+  return authPageData.value?.layout?.quotePosition === "left";
 });
 
 const formSectionOrder = computed(() => {
@@ -71,10 +75,11 @@ const loadDynamicTheme = async () => {
     theme.themes.value.light = themeConfig.themes.light;
     theme.themes.value.dark = themeConfig.themes.dark;
 
-    console.log('Dynamic theme loaded successfully');
+    console.log("Dynamic theme loaded successfully");
   } catch (error) {
-    console.error('Failed to load dynamic theme:', error);
-    themeError.value = error instanceof Error ? error.message : 'Failed to load theme';
+    console.error("Failed to load dynamic theme:", error);
+    themeError.value =
+      error instanceof Error ? error.message : "Failed to load theme";
   } finally {
     themeLoading.value = false;
   }
@@ -100,19 +105,15 @@ onMounted(async () => {
 // This page uses the default layout and doesn't require authentication
 </script>
 
-
-
 <template>
-
   <!-- Theme Loading State -->
-  <v-overlay v-if="themeLoading || authPageLoading" class="d-flex align-center justify-center">
-    <v-progress-circular
-      indeterminate
-      size="64"
-      color="primary"
-    />
+  <v-overlay
+    v-if="themeLoading || authPageLoading"
+    class="d-flex align-center justify-center"
+  >
+    <v-progress-circular indeterminate size="64" color="primary" />
     <div class="text-h6 ml-4">
-      {{ themeLoading ? 'Loading theme...' : 'Loading page data...' }}
+      {{ themeLoading ? "Loading theme..." : "Loading page data..." }}
     </div>
   </v-overlay>
 
@@ -129,7 +130,12 @@ onMounted(async () => {
   </v-alert>
 
   <!-- Main Content -->
-  <v-row v-if="!themeLoading && !authPageLoading && authPageData" class="fill-height" align="center" no-gutters>
+  <v-row
+    v-if="!themeLoading && !authPageLoading && authPageData"
+    class="fill-height"
+    align="center"
+    no-gutters
+  >
     <!-- Form Section -->
 
     <v-col
@@ -138,19 +144,18 @@ onMounted(async () => {
       class="bg-primary d-flex align-center justify-center fill-height"
       :order="formSectionOrder"
     >
-
       <div class="w-100" style="max-width: 500px">
-         <!-- Back to Home Button (static) -->
-            <v-btn
-              variant="text"
-              color="light"
-              size="small"
-              class="ma-2"
-              @click="navigateHome"
-            >
-              <v-icon start size="small">mdi-arrow-left</v-icon>
-              Back to Home
-            </v-btn>
+        <!-- Back to Home Button (static) -->
+        <v-btn
+          variant="text"
+          color="light"
+          size="small"
+          class="ma-2"
+          @click="navigateHome"
+        >
+          <v-icon start size="small">mdi-arrow-left</v-icon>
+          Back to Home
+        </v-btn>
         <!-- Auth Form Container -->
         <v-fade-transition mode="out-in">
           <div v-if="isLoginMode" key="login">
@@ -198,7 +203,7 @@ onMounted(async () => {
               </v-col>
             </v-row>
 
-                <div class="text-caption text-medium-emphasis mt-2">
+            <div class="text-caption text-medium-emphasis mt-2">
               Social login coming soon
             </div>
           </v-card-text>
@@ -207,7 +212,6 @@ onMounted(async () => {
         <!-- Toggle Mode Button (static) -->
         <v-card class="mx-auto mt-2" variant="text">
           <v-card-actions class="justify-center">
-
             <v-btn
               variant="text"
               color="light"
@@ -217,12 +221,9 @@ onMounted(async () => {
               <v-icon start>mdi-swap-horizontal</v-icon>
               Switch to {{ isLoginMode ? "Register" : "Login" }}
             </v-btn>
-
           </v-card-actions>
-
         </v-card>
       </div>
-
     </v-col>
 
     <!-- Quote Section -->
@@ -237,22 +238,37 @@ onMounted(async () => {
           mdi-format-quote-open
         </v-icon>
 
-        <div class="text-h4 font-weight-light mb-6 text-primary">
+        <div class="text-h4 font-weight-light mb-6 text-primary quote-text">
           {{ authPageData.quote.text }}
         </div>
 
-        <div class="text-h6 text-primary opacity-75">
+        <div class="text-h6 text-primary opacity-75 quote-author">
           — {{ authPageData.quote.author }}
           <span v-if="authPageData.quote.source" class="text-caption">
             ({{ authPageData.quote.source }})
           </span>
         </div>
 
-        <div v-if="authPageData.quote.motivationalText" class="text-body-1 text-primary opacity-75">
+        <div
+          v-if="authPageData.quote.motivationalText"
+          class="text-body-1 text-primary opacity-75 quote-subtext"
+        >
           {{ authPageData.quote.motivationalText }}
         </div>
       </v-card-text>
-
     </v-col>
   </v-row>
 </template>
+
+<style scoped>
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500&display=swap");
+
+.quote-text {
+  font-family: "Playfair Display", serif;
+}
+
+.quote-author,
+.quote-subtext {
+  font-family: "DM Sans", sans-serif;
+}
+</style>
