@@ -3,8 +3,7 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthUserStore } from "@/stores/authUser";
 import InnerLayoutWrapper from "@/layouts/InnerLayoutWrapper.vue";
-import SellerStatistics from "@/pages/hometab/components/SellerStatistics.vue";
-import SellerListings from "@/pages/hometab/components/SellerListings.vue";
+import SellerListWidget from "@/pages/seller/SellerListWidget.vue";
 
 const authStore = useAuthUserStore();
 const { userName } = storeToRefs(authStore);
@@ -27,13 +26,7 @@ const displayName = computed(() => userName.value || "Seller");
           </v-col>
         </v-row>
 
-        <SellerStatistics />
-
-        <v-row dense class="mt-6">
-          <v-col cols="12">
-            <SellerListings />
-          </v-col>
-        </v-row>
+        <SellerListWidget />
       </v-container>
     </template>
   </InnerLayoutWrapper>
