@@ -1,162 +1,136 @@
 <script lang="ts" setup>
-import type { UIConfig } from "@/controller/landingController";
-import { computed } from "vue";
-
 interface Props {
-  config?: UIConfig | null;
+  isDarkMode?: boolean;
 }
 
 const props = defineProps<Props>();
 
-const footerConfig = computed(() => props.config?.footer);
-const currentYear = computed(() => new Date().getFullYear());
-
-function openLink(url: string) {
-  window.open(url, "_blank", "noopener,noreferrer");
-}
+const scrollTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+};
 </script>
 
 <template>
-  <v-footer
-    v-if="config?.showFooter && footerConfig"
-    app
-    class="text-white"
-    :color="footerConfig.color"
-    elevation="4"
-  >
-    <v-container>
-      <!-- Main Footer Content - Two Column Layout -->
-      <v-row justify="center" class="text-center">
-        <!-- Brand Section -->
-        <v-col cols="12" md="6" class="mt-6">
-          <div class="mt-6">
-            <div class="text-h5 font-weight-bold mb-2">
-              <v-avatar
-                :color="footerConfig.companyName ? 'primary' : 'transparent'"
-                size="64"
-                class="mb-3"
-              >
-                <v-icon :icon="footerConfig.icon" size="32" color="white" />
-              </v-avatar>
-              {{ footerConfig.companyName }}
-            </div>
-
-            <div class="text-body-1 text-grey-lighten-1 mb-4">
-              {{ footerConfig.tagline }}
-            </div>
-          </div>
-        </v-col>
-
-        <!-- Thesis Team Section -->
-        <v-col
-          v-if="footerConfig.thesisTeam?.enabled"
-          cols="12"
-          md="6"
-          class="mt-6"
-        >
-          <div class="mb-6">
-            <div class="text-h6 font-weight-bold mb-2">
-              {{ footerConfig.thesisTeam.title }}
-            </div>
-            <div class="text-body-2 text-grey-lighten-1 mb-4">
-              {{ footerConfig.thesisTeam.subtitle }}
-            </div>
-
-            <v-row justify="center" class="no-gutters">
-              <v-col
-                v-for="member in footerConfig.thesisTeam.members"
-                :key="member.name"
-                cols="12"
-                sm="3"
-              >
-                <div>
-                  <v-avatar
-                    :image="member.avatar"
-                    size="64"
-                    class="mb-3"
-                    color="primary"
-                  >
-                    <v-icon
-                      v-if="!member.avatar"
-                      icon="mdi-account"
-                      size="32"
-                    />
-                  </v-avatar>
-
-                  <v-card-title class="text-body-1 font-weight-bold">
-                    {{ member.name }}
-                  </v-card-title>
-
-                  <v-card-subtitle class="text-caption text-grey-lighten-1">
-                    {{ member.role }}
-                  </v-card-subtitle>
-                </div>
-              </v-col>
-            </v-row>
-          </div>
-        </v-col>
-      </v-row>
-
-      <!-- Social Links and Technologies Section -->
-      <v-row justify="center" class="text-center">
-        <v-col cols="12" md="8" lg="6">
-          <!-- Social Links as Chips -->
-          <div class="mb-6">
-            <v-chip
-              v-for="social in footerConfig.socialLinks"
-              :key="social.platform"
-              :aria-label="social.label"
-              class="ma-1"
-              color="primary"
-              variant="outlined"
-              size="large"
-              @click="openLink(social.url)"
-            >
-              <template #prepend>
-                <v-icon :icon="social.icon" />
-              </template>
-              {{ social.label }}
-            </v-chip>
-          </div>
-
-          <!-- Technologies Section with Enhanced Styling -->
-          <div class="mb-6">
-            <div class="text-body-2 text-grey-lighten-2 mb-3">Powered by</div>
-
-            <v-row justify="center" class="no-gutters">
-              <v-col
-                v-for="(tech, index) in footerConfig.technologies"
-                :key="tech.name"
-                cols="auto"
-                class="mx-2"
-              >
-                <div class="pa-3 text-center">
-                  <v-icon
-                    :icon="tech.icon"
-                    :color="tech.color"
-                    size="24"
-                    class="mb-1"
-                  />
-                  <div class="text-caption font-weight-medium">
-                    {{ tech.name }}
-                  </div>
-                </div>
-              </v-col>
-            </v-row>
-          </div>
-        </v-col>
-      </v-row>
-
-      <!-- Bottom Section with Divider -->
-      <v-divider class="my-4" color="rgba(255, 255, 255, 0.2)" />
-
-      <v-row justify="center" class="text-center">
-        <v-col cols="12">
-          <div class="text-caption text-grey-lighten-1">
-            {{ currentYear }} © {{ footerConfig.copyright }}
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-footer>
+  <footer class="footer">
+    <div class="cta-banner" :class="{ 'cta-banner-dark': props.isDarkMode }">
+      <h2>Ready to turn waste into income?</h2>
+      <button class="btn btn-primary" @click="scrollTo('auth')">
+        Start Selling on Siklo &rarr;
+      </button>
+    </div>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img
+          src="/assets/logo.png"
+          alt="Siklo Logo"
+          class="footer-logo-img"
+          :style="{
+            filter: props.isDarkMode ? 'brightness(0) invert(1)' : 'none',
+          }"
+        />
+      </div>
+      <p class="footer-tagline">
+        Academic Excellence — Caraga State University
+      </p>
+      <div class="footer-links">
+        <a href="#features" @click.prevent="scrollTo('features')">Features</a>
+        <a href="#impact" @click.prevent="scrollTo('impact')">Impact</a>
+        <a href="#how-it-works" @click.prevent="scrollTo('how-it-works')">
+          How It Works
+        </a>
+      </div>
+      <p class="copyright">
+        &copy; {{ new Date().getFullYear() }} Siklo Team. All rights reserved.
+      </p>
+    </div>
+  </footer>
 </template>
+
+<style scoped>
+.footer {
+  text-align: center;
+  padding: 0;
+}
+
+.cta-banner {
+  background: var(--accent-yellow);
+  padding: 80px 5%;
+  color: #ffffff;
+}
+
+.cta-banner-dark {
+  color: #141e17;
+}
+
+.cta-banner h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 48px);
+  margin-bottom: 30px;
+}
+
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  padding: 14px 32px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background: var(--primary-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2d5035;
+  box-shadow: 0 8px 20px rgba(91, 159, 104, 0.4);
+}
+
+.footer-content {
+  background: var(--card-bg);
+  padding: 60px 5% 30px;
+}
+
+.footer-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.footer-logo-img {
+  height: 64px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-tagline {
+  color: var(--text-body);
+  margin: 10px 0 30px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: var(--text-dark);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.copyright {
+  color: var(--text-body);
+  opacity: 0.7;
+  font-size: 14px;
+}
+</style>
