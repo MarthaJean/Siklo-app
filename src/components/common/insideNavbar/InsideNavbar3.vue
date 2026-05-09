@@ -217,10 +217,18 @@ async function handleLogout() {
                 :width="navbarConfig.logo.width || 42"
                 :height="navbarConfig.logo.height || 42"
                 contain
+                :class="currentTheme === 'light' ? 'navbar-logo--dark' : ''"
               >
                 <template #error>
                   <!-- Fallback to avatar with icon if image fails to load -->
-                  <v-avatar :color="navbarConfig.color" size="42">
+                  <v-avatar
+                    :color="
+                      currentTheme === 'light'
+                        ? 'grey-darken-4'
+                        : navbarConfig.color
+                    "
+                    size="42"
+                  >
                     <v-icon :icon="navbarConfig.icon" size="22" color="white" />
                   </v-avatar>
                 </template>
@@ -228,7 +236,14 @@ async function handleLogout() {
             </template>
             <template v-else>
               <!-- Default avatar with icon when no logo is configured -->
-              <v-avatar :color="navbarConfig.color" size="42">
+              <v-avatar
+                :color="
+                  currentTheme === 'light'
+                    ? 'grey-darken-4'
+                    : navbarConfig.color
+                "
+                size="42"
+              >
                 <v-icon :icon="navbarConfig.icon" size="22" color="white" />
               </v-avatar>
             </template>
@@ -236,7 +251,12 @@ async function handleLogout() {
 
           <!-- Hide title on mobile to minimize navbar -->
           <div class="d-flex flex-column ms-2 d-none d-md-flex">
-            <span class="text-subtitle-1 font-weight-bold text-primary">
+            <span
+              class="text-subtitle-1 font-weight-bold"
+              :class="
+                currentTheme === 'light' ? 'text-grey-darken-4' : 'text-primary'
+              "
+            >
               {{ navbarConfig.title }}
             </span>
             <span class="text-caption text-medium-emphasis">
@@ -338,10 +358,18 @@ async function handleLogout() {
                   :width="navbarConfig.logo.width || 48"
                   :height="navbarConfig.logo.height || 48"
                   contain
+                  :class="currentTheme === 'light' ? 'navbar-logo--dark' : ''"
                 >
                   <template #error>
                     <!-- Fallback to avatar with icon if image fails to load -->
-                    <v-avatar :color="navbarConfig.color" size="48">
+                    <v-avatar
+                      :color="
+                        currentTheme === 'light'
+                          ? 'grey-darken-4'
+                          : navbarConfig.color
+                      "
+                      size="48"
+                    >
                       <v-icon
                         :icon="navbarConfig.icon"
                         size="24"
@@ -353,14 +381,28 @@ async function handleLogout() {
               </template>
               <template v-else>
                 <!-- Default avatar with icon when no logo is configured -->
-                <v-avatar :color="navbarConfig.color" size="48">
+                <v-avatar
+                  :color="
+                    currentTheme === 'light'
+                      ? 'grey-darken-4'
+                      : navbarConfig.color
+                  "
+                  size="48"
+                >
                   <v-icon :icon="navbarConfig.icon" size="24" color="white" />
                 </v-avatar>
               </template>
             </v-badge>
 
             <div class="d-flex flex-column">
-              <span class="text-h6 font-weight-bold text-primary">
+              <span
+                class="text-h6 font-weight-bold"
+                :class="
+                  currentTheme === 'light'
+                    ? 'text-grey-darken-4'
+                    : 'text-primary'
+                "
+              >
                 {{ navbarConfig.title }}
               </span>
               <span class="text-caption text-medium-emphasis">
@@ -503,5 +545,7 @@ async function handleLogout() {
 </template>
 
 <style scoped>
-/* All styling handled by Vuetify components and utilities only */
+.navbar-logo--dark {
+  filter: brightness(0.65) contrast(1.1);
+}
 </style>
