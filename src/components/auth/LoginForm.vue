@@ -1,5 +1,14 @@
 <template>
-  <v-card-title class="text-h5 text-center py-6"> Sign In </v-card-title>
+  <v-card-title class="text-center py-6">
+    <v-img
+      src="/assets/logo.png"
+      alt="Siklo"
+      height="200"
+      cover
+      class="mx-auto mb-3"
+    />
+    <div class="text-h5">Sign In</div>
+  </v-card-title>
 
   <v-card-text class="px-6 pb-6">
     <v-form ref="formRef" v-model="formValid" @submit.prevent="handleLogin">
